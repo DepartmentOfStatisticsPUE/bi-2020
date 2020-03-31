@@ -1749,78 +1749,63 @@ summary {
 
 
 <!-- rnb-text-begin -->
+<p>Wczytujemy pakiety</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShydmVzdClcblxuYGBgIn0= -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShydmVzdClcbmxpYnJhcnkodGlkeXZlcnNlKVxuYGBgIn0= -->
 <pre class="r"><code>library(rvest)
-</code></pre>
+library(tidyverse)</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiTG9hZGluZyByZXF1aXJlZCBwYWNrYWdlOiB4bWwyXG5cbkF0dGFjaGluZyBwYWNrYWdlOiDigJhydmVzdOKAmVxuXG5UaGUgZm9sbG93aW5nIG9iamVjdCBpcyBtYXNrZWQgZnJvbSDigJhwYWNrYWdlOnB1cnJy4oCZOlxuXG4gICAgcGx1Y2tcblxuVGhlIGZvbGxvd2luZyBvYmplY3QgaXMgbWFza2VkIGZyb20g4oCYcGFja2FnZTpyZWFkcuKAmTpcblxuICAgIGd1ZXNzX2VuY29kaW5nXG4ifQ== -->
-<pre><code>Loading required package: xml2
-
-Attaching package: ‘rvest’
-
-The following object is masked from ‘package:purrr’:
-
-    pluck
-
-The following object is masked from ‘package:readr’:
-
-    guess_encoding</code></pre>
-<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
+<p>Zapisujemy adres strony interentowej</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucHJhY3VqX2FyY2hcblxuYGBgIn0= -->
-<pre class="r"><code>pracuj_arch
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>Wykorzystujemy funkcję <code>read_html</code> z pakietu <code>rvest</code> umożliwiającą pobranie zawartości strony interentowej</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucHJhY3VqX2RvY1xuXG5gYGAifQ== -->
+<pre class="r"><code>pracuj_doc
 </code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoie2h0bWxfZG9jdW1lbnR9XG48aHRtbD5cblsxXSA8aGVhZD5cXG48bWV0YSBodHRwLWVxdWl2PVwiQ29udGVudC1UeXBlXCIgY29udGVudD1cInRleHQvaHRtbDsgY2hhcnNldD1VVEYtOFwiPlxcbjxtZXRhIC4uLlxuWzJdIDxib2R5PlxcbiA8bm9zY3JpcHQ+PGlmcmFtZSBzcmM9XCIvL3d3dy5nb29nbGV0YWdtYW5hZ2VyLmNvbS9ucy5odG1sP2lkPUdUTS00SjZQXCIgaGUgLi4uXG4ifQ== -->
+<!-- rnb-output-begin eyJkYXRhIjoie2h0bWxfZG9jdW1lbnR9XG48aHRtbD5cblsxXSA8aGVhZD5cXG48bWV0YSBodHRwLWVxdWl2PVwiQ29udGVudC1UeXBlXCIgY29udGVudD1cInRleHQvaHRtbDsgY2hhcnNldD1VVEYtOFwiPlxcbjxtZXRhIGNoYXJzZXQ9XCJ1IC4uLlxuWzJdIDxib2R5PlxcbiA8bm9zY3JpcHQ+PGlmcmFtZSBzcmM9XCIvL3d3dy5nb29nbGV0YWdtYW5hZ2VyLmNvbS9ucy5odG1sP2lkPUdUTS00SjZQXCIgaGVpZ2h0PVwiMFwiIHdpIC4uLlxuIn0= -->
 <pre><code>{html_document}
 &lt;html&gt;
-[1] &lt;head&gt;\n&lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=UTF-8&quot;&gt;\n&lt;meta ...
-[2] &lt;body&gt;\n &lt;noscript&gt;&lt;iframe src=&quot;//www.googletagmanager.com/ns.html?id=GTM-4J6P&quot; he ...</code></pre>
+[1] &lt;head&gt;\n&lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=UTF-8&quot;&gt;\n&lt;meta charset=&quot;u ...
+[2] &lt;body&gt;\n &lt;noscript&gt;&lt;iframe src=&quot;//www.googletagmanager.com/ns.html?id=GTM-4J6P&quot; height=&quot;0&quot; wi ...</code></pre>
 <!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
+<p>Pobieramy fragment strony internetowej zawierającej ogłoszenia o pracę, które zapisane są w <code>div.offers_item</code></p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucHJhY3VqX2FyY2ggJT4lXG4gIGh0bWxfbm9kZXMoXCJkaXYub2ZmZXJzX2l0ZW1cIikgJT4lXG4gIGh0bWxfbm9kZXMoXCJzcGFuLm9mZmVyc19pdGVtX2xpbmtfY250X3BhcnQ6Zmlyc3QtY2hpbGRcIilcblxuYGBgIn0= -->
-<pre class="r"><code>pracuj_arch %&gt;%
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucHJhY3VqX2RvYyAlPiUgXG4gICMjIHR1dGFqIHBvYmllcmFteSBmcmFnbWVudHkgc3Ryb24gZ2R6aWUgemF3YXJ0ZSBzxIUgb2fFgm9zemVuaWFcbiAgaHRtbF9ub2RlcyhcImRpdi5vZmZlcnNfaXRlbVwiKSAlPiVcbiAgIyMgdHV0YWogcG9iaWVyYW15IGRhdHkgeiBvZ8WCb3N6ZcWEXG4gIGh0bWxfbm9kZXMoXCJzcGFuLm9mZmVyc19pdGVtX2Rlc2NfZGF0ZVwiKSAlPiVcbiAgaHRtbF90ZXh0KClcblxuYGBgIn0= -->
+<pre class="r"><code>pracuj_doc %&gt;% 
+  ## tutaj pobieramy fragmenty stron gdzie zawarte są ogłoszenia
   html_nodes(&quot;div.offers_item&quot;) %&gt;%
-  html_nodes(&quot;span.offers_item_link_cnt_part:first-child&quot;)
+  ## tutaj pobieramy daty z ogłoszeń
+  html_nodes(&quot;span.offers_item_desc_date&quot;) %&gt;%
+  html_text()
 </code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoie3htbF9ub2Rlc2V0ICg1MCl9XG4gWzFdIDxzcGFuIGNsYXNzPVwib2ZmZXJzX2l0ZW1fbGlua19jbnRfcGFydFwiPktvbnN1bHRhbnQgY2FsbCBjZW50ZXI8XC9zcGFuPlxuIFsyXSA8c3BhbiBjbGFzcz1cIm9mZmVyc19pdGVtX2xpbmtfY250X3BhcnRcIj5PcGVyYXRvciBNYXN6eW4gVG9yb3d5Y2gg4oCTIFNwZWNqYWxpc3RhIC0gIC4uLlxuIFszXSA8c3BhbiBjbGFzcz1cIm9mZmVyc19pdGVtX2xpbmtfY250X3BhcnRcIj5FbGVrdHJvbW9udGVyIEluc3RhbGFjamkgRWxla3RyeWN6bnljaDxcL3MgLi4uXG4gWzRdIDxzcGFuIGNsYXNzPVwib2ZmZXJzX2l0ZW1fbGlua19jbnRfcGFydFwiPkVsZWt0cm9tb250ZXIgSW5zdGFsYWNqaSBFbGVrdHJ5Y3pueWNoIC0gIC4uLlxuIFs1XSA8c3BhbiBjbGFzcz1cIm9mZmVyc19pdGVtX2xpbmtfY250X3BhcnRcIj5NYWdhenluaWVyPFwvc3Bhbj5cbiBbNl0gPHNwYW4gY2xhc3M9XCJvZmZlcnNfaXRlbV9saW5rX2NudF9wYXJ0XCI+QW1iYXNhZG9yIE1hcmtpIC0gV2FsbCBTdHJlZXQgTWFnYXppbmUgLSAgLi4uXG4gWzddIDxzcGFuIGNsYXNzPVwib2ZmZXJzX2l0ZW1fbGlua19jbnRfcGFydFwiPkFtYmFzYWRvciBNYXJraSAtIFdhbGwgU3RyZWV0IE1hZ2F6aW5lIC0gIC4uLlxuIFs4XSA8c3BhbiBjbGFzcz1cIm9mZmVyc19pdGVtX2xpbmtfY250X3BhcnRcIj5BbWJhc2Fkb3IgTWFya2kgLSBXYWxsIFN0cmVldCBNYWdhemluZSAtICAuLi5cbiBbOV0gPHNwYW4gY2xhc3M9XCJvZmZlcnNfaXRlbV9saW5rX2NudF9wYXJ0XCI+QW1iYXNhZG9yIE1hcmtpIC0gV2FsbCBTdHJlZXQgTWFnYXppbmUgLSAgLi4uXG5bMTBdIDxzcGFuIGNsYXNzPVwib2ZmZXJzX2l0ZW1fbGlua19jbnRfcGFydFwiPkFtYmFzYWRvciBNYXJraSAtIFdhbGwgU3RyZWV0IE1hZ2F6aW5lIC0gIC4uLlxuWzExXSA8c3BhbiBjbGFzcz1cIm9mZmVyc19pdGVtX2xpbmtfY250X3BhcnRcIj5BbWJhc2Fkb3IgTWFya2kgLSBXYWxsIFN0cmVldCBNYWdhemluZSAtICAuLi5cblsxMl0gPHNwYW4gY2xhc3M9XCJvZmZlcnNfaXRlbV9saW5rX2NudF9wYXJ0XCI+QW1iYXNhZG9yIE1hcmtpIC0gV2FsbCBTdHJlZXQgTWFnYXppbmUgLSAgLi4uXG5bMTNdIDxzcGFuIGNsYXNzPVwib2ZmZXJzX2l0ZW1fbGlua19jbnRfcGFydFwiPkFtYmFzYWRvciBNYXJraSAtIFdhbGwgU3RyZWV0IE1hZ2F6aW5lIC0gIC4uLlxuWzE0XSA8c3BhbiBjbGFzcz1cIm9mZmVyc19pdGVtX2xpbmtfY250X3BhcnRcIj5BbWJhc2Fkb3IgTWFya2kgLSBXYWxsIFN0cmVldCBNYWdhemluZSAtICAuLi5cblsxNV0gPHNwYW4gY2xhc3M9XCJvZmZlcnNfaXRlbV9saW5rX2NudF9wYXJ0XCI+QW1iYXNhZG9yIE1hcmtpIC0gV2FsbCBTdHJlZXQgTWFnYXppbmUgLSAgLi4uXG5bMTZdIDxzcGFuIGNsYXNzPVwib2ZmZXJzX2l0ZW1fbGlua19jbnRfcGFydFwiPkFtYmFzYWRvciBNYXJraSAtIFdhbGwgU3RyZWV0IE1hZ2F6aW5lIC0gIC4uLlxuWzE3XSA8c3BhbiBjbGFzcz1cIm9mZmVyc19pdGVtX2xpbmtfY250X3BhcnRcIj5BbWJhc2Fkb3IgTWFya2kgLSBXYWxsIFN0cmVldCBNYWdhemluZSAtICAuLi5cblsxOF0gPHNwYW4gY2xhc3M9XCJvZmZlcnNfaXRlbV9saW5rX2NudF9wYXJ0XCI+QW1iYXNhZG9yIE1hcmtpIC0gV2FsbCBTdHJlZXQgTWFnYXppbmUgLSAgLi4uXG5bMTldIDxzcGFuIGNsYXNzPVwib2ZmZXJzX2l0ZW1fbGlua19jbnRfcGFydFwiPkFtYmFzYWRvciBNYXJraSAtIFdhbGwgU3RyZWV0IE1hZ2F6aW5lIC0gIC4uLlxuWzIwXSA8c3BhbiBjbGFzcz1cIm9mZmVyc19pdGVtX2xpbmtfY250X3BhcnRcIj5BbWJhc2Fkb3IgTWFya2kgLSBXYWxsIFN0cmVldCBNYWdhemluZSAtICAuLi5cbi4uLlxuIn0= -->
-<pre><code>{xml_nodeset (50)}
- [1] &lt;span class=&quot;offers_item_link_cnt_part&quot;&gt;Konsultant call center&lt;/span&gt;
- [2] &lt;span class=&quot;offers_item_link_cnt_part&quot;&gt;Operator Maszyn Torowych – Specjalista -  ...
- [3] &lt;span class=&quot;offers_item_link_cnt_part&quot;&gt;Elektromonter Instalacji Elektrycznych&lt;/s ...
- [4] &lt;span class=&quot;offers_item_link_cnt_part&quot;&gt;Elektromonter Instalacji Elektrycznych -  ...
- [5] &lt;span class=&quot;offers_item_link_cnt_part&quot;&gt;Magazynier&lt;/span&gt;
- [6] &lt;span class=&quot;offers_item_link_cnt_part&quot;&gt;Ambasador Marki - Wall Street Magazine -  ...
- [7] &lt;span class=&quot;offers_item_link_cnt_part&quot;&gt;Ambasador Marki - Wall Street Magazine -  ...
- [8] &lt;span class=&quot;offers_item_link_cnt_part&quot;&gt;Ambasador Marki - Wall Street Magazine -  ...
- [9] &lt;span class=&quot;offers_item_link_cnt_part&quot;&gt;Ambasador Marki - Wall Street Magazine -  ...
-[10] &lt;span class=&quot;offers_item_link_cnt_part&quot;&gt;Ambasador Marki - Wall Street Magazine -  ...
-[11] &lt;span class=&quot;offers_item_link_cnt_part&quot;&gt;Ambasador Marki - Wall Street Magazine -  ...
-[12] &lt;span class=&quot;offers_item_link_cnt_part&quot;&gt;Ambasador Marki - Wall Street Magazine -  ...
-[13] &lt;span class=&quot;offers_item_link_cnt_part&quot;&gt;Ambasador Marki - Wall Street Magazine -  ...
-[14] &lt;span class=&quot;offers_item_link_cnt_part&quot;&gt;Ambasador Marki - Wall Street Magazine -  ...
-[15] &lt;span class=&quot;offers_item_link_cnt_part&quot;&gt;Ambasador Marki - Wall Street Magazine -  ...
-[16] &lt;span class=&quot;offers_item_link_cnt_part&quot;&gt;Ambasador Marki - Wall Street Magazine -  ...
-[17] &lt;span class=&quot;offers_item_link_cnt_part&quot;&gt;Ambasador Marki - Wall Street Magazine -  ...
-[18] &lt;span class=&quot;offers_item_link_cnt_part&quot;&gt;Ambasador Marki - Wall Street Magazine -  ...
-[19] &lt;span class=&quot;offers_item_link_cnt_part&quot;&gt;Ambasador Marki - Wall Street Magazine -  ...
-[20] &lt;span class=&quot;offers_item_link_cnt_part&quot;&gt;Ambasador Marki - Wall Street Magazine -  ...
-...</code></pre>
+<!-- rnb-output-begin eyJkYXRhIjoiIFsxXSBcIjIwMTktMDEtMDdcIiBcIjIwMTktMDEtMTRcIiBcIjIwMTktMDEtMjFcIiBcIjIwMTktMDEtMzBcIiBcIjIwMTktMDEtMThcIiBcIjIwMTktMDEtMThcIiBcIjIwMTktMDEtMThcIlxuIFs4XSBcIjIwMTktMDEtMjVcIiBcIjIwMTktMDEtMjVcIiBcIjIwMTktMDEtMjVcIiBcIjIwMTktMDEtMjVcIiBcIjIwMTktMDEtMTBcIiBcIjIwMTktMDEtMTBcIiBcIjIwMTktMDEtMTBcIlxuWzE1XSBcIjIwMTktMDEtMDhcIiBcIjIwMTktMDEtMDhcIiBcIjIwMTktMDEtMDhcIiBcIjIwMTktMDEtMDhcIiBcIjIwMTktMDEtMDhcIiBcIjIwMTktMDEtMDhcIiBcIjIwMTktMDEtMDhcIlxuWzIyXSBcIjIwMTktMDEtMDhcIiBcIjIwMTktMDEtMDhcIiBcIjIwMTktMDEtMDhcIiBcIjIwMTktMDEtMDhcIiBcIjIwMTktMDEtMDhcIiBcIjIwMTktMDEtMDhcIiBcIjIwMTktMDEtMDhcIlxuWzI5XSBcIjIwMTktMDEtMDhcIiBcIjIwMTktMDEtMDhcIiBcIjIwMTktMDEtMjVcIiBcIjIwMTktMDEtMDlcIiBcIjIwMTktMDEtMDlcIiBcIjIwMTktMDEtMzFcIiBcIjIwMTktMDEtMzFcIlxuWzM2XSBcIjIwMTktMDEtMzFcIiBcIjIwMTktMDEtMzFcIiBcIjIwMTktMDEtMzFcIiBcIjIwMTktMDEtMzFcIiBcIjIwMTktMDEtMzFcIiBcIjIwMTktMDEtMzFcIiBcIjIwMTktMDEtMzFcIlxuWzQzXSBcIjIwMTktMDEtMzFcIiBcIjIwMTktMDEtMzFcIiBcIjIwMTktMDEtMzFcIiBcIjIwMTktMDEtMzFcIiBcIjIwMTktMDEtMzFcIiBcIjIwMTktMDEtMzFcIiBcIjIwMTktMDEtMzFcIlxuWzUwXSBcIjIwMTktMDEtMTBcIlxuIn0= -->
+<pre><code> [1] &quot;2019-01-07&quot; &quot;2019-01-14&quot; &quot;2019-01-21&quot; &quot;2019-01-30&quot; &quot;2019-01-18&quot; &quot;2019-01-18&quot; &quot;2019-01-18&quot;
+ [8] &quot;2019-01-25&quot; &quot;2019-01-25&quot; &quot;2019-01-25&quot; &quot;2019-01-25&quot; &quot;2019-01-10&quot; &quot;2019-01-10&quot; &quot;2019-01-10&quot;
+[15] &quot;2019-01-08&quot; &quot;2019-01-08&quot; &quot;2019-01-08&quot; &quot;2019-01-08&quot; &quot;2019-01-08&quot; &quot;2019-01-08&quot; &quot;2019-01-08&quot;
+[22] &quot;2019-01-08&quot; &quot;2019-01-08&quot; &quot;2019-01-08&quot; &quot;2019-01-08&quot; &quot;2019-01-08&quot; &quot;2019-01-08&quot; &quot;2019-01-08&quot;
+[29] &quot;2019-01-08&quot; &quot;2019-01-08&quot; &quot;2019-01-25&quot; &quot;2019-01-09&quot; &quot;2019-01-09&quot; &quot;2019-01-31&quot; &quot;2019-01-31&quot;
+[36] &quot;2019-01-31&quot; &quot;2019-01-31&quot; &quot;2019-01-31&quot; &quot;2019-01-31&quot; &quot;2019-01-31&quot; &quot;2019-01-31&quot; &quot;2019-01-31&quot;
+[43] &quot;2019-01-31&quot; &quot;2019-01-31&quot; &quot;2019-01-31&quot; &quot;2019-01-31&quot; &quot;2019-01-31&quot; &quot;2019-01-31&quot; &quot;2019-01-31&quot;
+[50] &quot;2019-01-10&quot;</code></pre>
 <!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
+<p>Pobieramy nagłówki określające stanowisko</p>
 <!-- rnb-text-end -->
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiUiBOb3RlYm9vayIKb3V0cHV0OiBodG1sX25vdGVib29rCi0tLQoKYGBge3J9CmxpYnJhcnkocnZlc3QpCmxpYnJhcnkodGlkeXZlcnNlKQpgYGAKCmBgYHtyfQpwcmFjdWpfYXJjaCA8LSByZWFkX2h0bWwoImh0dHBzOi8vYXJjaGl3dW0ucHJhY3VqLnBsLyIpCnByYWN1al9hcmNoCmBgYAoKYGBge3J9CnByYWN1al9hcmNoICU+JQogIGh0bWxfbm9kZXMoImRpdi5vZmZlcnNfaXRlbSIpICU+JQogIGh0bWxfbm9kZXMoInNwYW4ub2ZmZXJzX2l0ZW1fbGlua19jbnRfcGFydDpmaXJzdC1jaGlsZCIpCmh0bWxfbm9kZXMoInNwYW4ub2ZmZXJzX2l0ZW1fbGlua19jbnRfcGFydDpmaXJzdC1jaGlsZCIpCmBgYAoK</div>
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiUiBOb3RlYm9vayIKb3V0cHV0OiBodG1sX25vdGVib29rCi0tLQoKV2N6eXR1amVteSBwYWtpZXR5CgpgYGB7cn0KbGlicmFyeShydmVzdCkKbGlicmFyeSh0aWR5dmVyc2UpCmBgYAoKWmFwaXN1amVteSBhZHJlcyBzdHJvbnkgaW50ZXJlbnRvd2VqCgpgYGB7cn0KcHJhY3VqIDwtICJodHRwczovL2FyY2hpd3VtLnByYWN1ai5wbC9hcmNoaXZlL29mZmVycz9ZZWFyPTIwMTkmTW9udGg9MSZQYWdlTnVtYmVyPTEiCmBgYAoKV3lrb3J6eXN0dWplbXkgZnVua2NqxJkgYHJlYWRfaHRtbGAgeiBwYWtpZXR1IGBydmVzdGAgdW1vxbxsaXdpYWrEhWPEhSBwb2JyYW5pZSB6YXdhcnRvxZtjaSBzdHJvbnkgaW50ZXJlbnRvd2VqCgpgYGB7cn0KcHJhY3VqX2RvYyA8LSByZWFkX2h0bWwoeCA9IHByYWN1aikKcHJhY3VqX2RvYwpgYGAKClBvYmllcmFteSBmcmFnbWVudCBzdHJvbnkgaW50ZXJuZXRvd2VqIHphd2llcmFqxIVjZWogb2fFgm9zemVuaWEgbyBwcmFjxJksIGt0w7NyZSB6YXBpc2FuZSBzxIUgdyBgZGl2Lm9mZmVyc19pdGVtYAoKYGBge3J9CnByYWN1al9kb2MgJT4lIAogICMjIHR1dGFqIHBvYmllcmFteSBmcmFnbWVudHkgc3Ryb24gZ2R6aWUgemF3YXJ0ZSBzxIUgb2fFgm9zemVuaWEKICBodG1sX25vZGVzKCJkaXYub2ZmZXJzX2l0ZW0iKSAlPiUKICAjIyB0dXRhaiBwb2JpZXJhbXkgZGF0eSB6IG9nxYJvc3plxYQKICBodG1sX25vZGVzKCJzcGFuLm9mZmVyc19pdGVtX2Rlc2NfZGF0ZSIpICU+JQogIGh0bWxfdGV4dCgpCmBgYAoKUG9iaWVyYW15IG5hZ8WCw7N3a2kgb2tyZcWbbGFqxIVjZSBzdGFub3dpc2tvIAoKCg==</div>
 
 
 

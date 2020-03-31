@@ -3,20 +3,37 @@ title: "R Notebook"
 output: html_notebook
 ---
 
+Wczytujemy pakiety
+
 ```{r}
 library(rvest)
 library(tidyverse)
 ```
 
-```{r}
-pracuj_arch <- read_html("https://archiwum.pracuj.pl/")
-pracuj_arch
-```
+Zapisujemy adres strony interentowej
 
 ```{r}
-pracuj_arch %>%
-  html_nodes("div.offers_item") %>%
-  html_nodes("span.offers_item_link_cnt_part:first-child")
-html_nodes("span.offers_item_link_cnt_part:first-child")
+pracuj <- "https://archiwum.pracuj.pl/archive/offers?Year=2019&Month=1&PageNumber=1"
 ```
+
+Wykorzystujemy funkcję `read_html` z pakietu `rvest` umożliwiającą pobranie zawartości strony interentowej
+
+```{r}
+pracuj_doc <- read_html(x = pracuj)
+pracuj_doc
+```
+
+Pobieramy fragment strony internetowej zawierającej ogłoszenia o pracę, które zapisane są w `div.offers_item`
+
+```{r}
+pracuj_doc %>% 
+  ## tutaj pobieramy fragmenty stron gdzie zawarte są ogłoszenia
+  html_nodes("div.offers_item") %>%
+  ## tutaj pobieramy daty z ogłoszeń
+  html_nodes("span.offers_item_desc_date") %>%
+  html_text()
+```
+
+Pobieramy nagłówki określające stanowisko 
+
 
