@@ -1,0 +1,22 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(rvest)
+library(tidyverse)
+```
+
+```{r}
+pracuj_arch <- read_html("https://archiwum.pracuj.pl/")
+pracuj_arch
+```
+
+```{r}
+pracuj_arch %>%
+  html_nodes("div.offers_item") %>%
+  html_nodes("span.offers_item_link_cnt_part:first-child")
+html_nodes("span.offers_item_link_cnt_part:first-child")
+```
+
