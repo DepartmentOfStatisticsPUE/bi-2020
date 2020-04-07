@@ -1,0 +1,84 @@
+# Estymacja w badaniach internetowych -- ważenie danych
+
+## Wstęp
+
+W przypadku badań interentowych możemy wyszczególnić następujące podejścia:
+
++ oparte na podejściu (pseudo)-randomizacyjnym -- przeważanie danych, w tym modelujemy skłonność do odpowiedzi (ang. propensity to respond),
++ oparte na podejściu modelowym -- budujemy model, którym chcemy wyjaśnić naszą cechę szeregiem cech $\x$.
++ mieszane -- budujemy model, a następnie przeważamy wyniki do znanych wartości globalnych
+
+
+Niech $U=\{1, 2, ..., N\}$ oznacza populację generalną, a $Y$ oznacza cechę, którą badamy (np. liczba osób pracujących w pełnym wymiarze czasu). Niech $y_i$ oznacza wartości cechy obserwowane dla każdej jednostki populacji. Założmy, że celem jest oszacowanie wartości średniej w populacji
+
+$$
+\bar{Y} = \sum_{i=1}^{N}y_k.
+$$
+
+Jednak najczęściej nie obserwujemy całej populacji, a pewien jej fragment (próbę). Jeżeli
+
+## Post-stratyfikacja 
+
+Celem post-stratyfikacji jest:
+
++ sprowadzenie rozkładów próby do znanych rozkładów populacji,
++ zmniejszenie obciażenia estymatorów na podstawie próby przez skorygowanie rozkładów próby do znanych rozkładów z populacji.
+
+Aby dokonać post-stratyfikacji potrzebujemy informacji o wartościach globalnych ($\bX$) zmiennych pomocniczych $\bx$, którymi mogą być płeć, wiek, województwo itp.  
+
+Założmy, że zmienna $\bx$ ma $L$ kategorii (warstw; np. wiek ma 5 kategorii, płeć ma dwie kategorie), które dzielą populację na podpopulacje $U_1, U_2,..., U_L$, a ich wielkości możemy oznaczyć jako $N_h$, gdzie $h=1,2,...,L$, a $N = N_1 + N_2 + ... + N_L$. Zakłdamy, że wielkości warstw są znane (pytanie: **skąd mogą być znane?**). Założmy, że obserwujemy próbę o liczebności $n$, którą również możemy podzielić na podpróby $n_1, n_2, ..., n_h$, które dają $n=n_1 + n_2 + ... + n_h$.
+
+Aby próba była reprezentatywna ze względu na cechę $\bx$ proporcja elementów w warstwie $h$ musi być równa $N_h/N$ dla $h=1,...,L$. W przypadku próby udział poszczególnych kategorii wyznaczamy jako $n_h / n$. W związku z tym aby dokonać korekty musimy dla każdej jednostki $i$ w warstwie $h$ dokonać następującej korekty
+
+$$
+c_i = \frac{N_h/N}{n_h/n} = \frac{N_h}{N} \frac{n}{n_h}.
+$$
+
+Jeżeli wagi wynikające z losowania są równe $d_i = n / N$, to estymator post-stratyfikowany dla średniej ma następującą postać:
+
+$$
+\bar{y}_{ps} = \frac{1}{N}\sum_{h=1}^{L} N_h\bar{y}^{(h)},
+(\#eq:y-ps)
+$$
+
+gdzie $\bar{y}^{(h)}$ jest średnią obliczoną na podstawie elementów obserwowanych w warstwie $h$. W tym przypadku post-stratyfikowany estymator średniej jest równy ważonej sumie średnich w poszczególnych warstwach.
+
+
+Teraz założmy, że nie wszystkie jednostki z próby udzieliły odpowiedzi (występuje problem non-response). W takim przypadku estymator  \@ref(eq:y-ps) na następującą postać:
+
+$$
+\bar{y}_{R,ps} = \frac{1}{N}\sum_{h=1}^{L} N_h\bar{y}^{(h)_R},
+(\#eq:y-ps-r)
+$$
+
+gdzie $\bar{y}^{(h)_R}$ to średnia dla jednostek w warstwie $h$, które odpowiedziały. Obciążenie estymatora \@ref(eq:y-ps-r) dane jest wzorem:
+
+$$
+B(\bar{y}_{R,ps}) = \frac{1}{N} \sum_{h=1}^{L} N_h \frac{R_{\rho{y}}^{(h)} S_{\rho}^{(h)} S_{y}^{(h)} }{ \bar{\rho}^{(h)}},
+$$
+
+gdzie $R_{\rho{y}}^{(h)}$ jest współczynnikiem korelacji miedzy $y$, a $\rho$ w warstwie $h$, $S_{\rho}^{(h)},S_{y}^{(h)}$ jest odchyleniem standardowym $\rho$ oraz $y$ w warstwie $h$, a $\bar{\rho}^{(h)}$ jest średnią $\rho$ w warstwie $h$.
+
+Obciązenie będzie małe w przypadku gdy:
+
+
++ Nie ma zależności między badaną cechą, a skłonnością do odpowiedzi w danej warstwie -- korelacja $R_{\rho{y}}^{(h)}$ jest niska,
++ Skłonności do odpowiedzi w warstwie są mniej więcej bliskie -- $S_{\rho}^{(h)}$ jest małe
++ Cecha $y$ jest słabo zróżnicowana w warstwach -- $S_{y}^{(h)}$ jest niskie.
+
+
+Następnie musimy rozważyć przypadek gdy występuje błąd pokrycia (undercoverage). Wtedy obciązenie post-stratyfikowanego estymatora jest równe
+
+$$
+B(\bar{y}_{I,ps}) = \sum_{h=1}^{L} W_h \frac{N_{NI,h}}{N_h} (\bar{y}_{I}^{(h)} - \bar{y}_{NI}^{(h)}),
+$$
+
+gdzie $W_h = N_h / N$, $N_{NI,h}$ to liczba osób bez internetu w warstwie $h$, $\bar{y}_{I}^{(h)}$ to średnia dla osób, które mają dostęp do internetu, a $\bar{y}_{NI}^{(h)}$ to średnia dla osób, które nie mają dostępu do Internetu.
+
+Obciażenie estymatora \@ref(eq:y-ps) w przypadku gdy wystąpiła autoselekcja jednostek do próby jest następujące: 
+
+$$
+B(\bar{y}_{S,ps}) = \frac{1}{N} \sum_{h=1}^{L} N_h \frac{R_{\rho{y}}^{(h)} S_{\rho}^{(h)} S_{y}^{(h)} }{ \bar{\rho}^{(h)}}.
+$$
+
+
