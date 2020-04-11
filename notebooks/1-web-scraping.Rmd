@@ -8,6 +8,7 @@ Wczytujemy pakiety
 ```{r}
 library(rvest)
 library(tidyverse)
+library(V8)
 ```
 
 Zapisujemy adres strony interentowej
@@ -51,5 +52,31 @@ pracuj_doc %>%
   html_nodes("div.offers_item") %>%
   html_nodes("a.offers_item_link") %>%
   html_attr("href") # href = hypertext reference
+```
+
+
+Pobieramy dane z pracuj.pl wykorzystując JavaScript
+
+![img](oferta-pracy.png)
+
+Adres: https://www.pracuj.pl/praca/specjalista-ds-analiz-danych-warszawa,oferta,7465612
+
+Nie będę tego kodu tłumaczył bo jest na tę chwilę za skomplikowany
+
+
+```{r}
+"https://www.pracuj.pl/praca/specjalista-ds-analiz-danych-warszawa,oferta,7465612" %>%
+  read_html() %>%
+  html_nodes(xpath = "//script[contains(text(), 'kansas-offerview')]") %>%
+  html_text() %>%
+  .[1] %>%
+  str_trim() %>%
+  str_replace("window\\['kansas-offerview'\\]", "var window") -> test
+env <- v8()
+env$eval(test)
+result <- env$get("window")
+str(result$offerReducer$offer,1)
+
+jsonlite::write_json(x = jsonlite::toJSON(result), path = "../data-raw/pracuj-oferta.json")
 ```
 

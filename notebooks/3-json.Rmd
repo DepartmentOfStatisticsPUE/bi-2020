@@ -1,0 +1,102 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(jsonlite)
+library(purrr)
+#install.packages("tidyjson")
+library(tidyjson)
+library(lubridate)
+```
+
+Wczytamy pierwszy plik z rozszerzeniem json - example_1.json
+
+```{r}
+plik1 <- read_json(path = "../data-raw/example_1.json")
+class(plik1)
+str(plik1,1)
+```
+
+
+```{r}
+plik1
+```
+
+```{r}
+plik1$fruit
+plik1[["fruit"]]
+```
+
+
+Wczytamy drugi plik, który ma bardziej skomplikowaną strukturę
+
+```{r}
+plik2 <- read_json(path = "../data-raw/example_2.json")
+str(plik2,5)
+```
+
+```{r}
+plik2_flatten <- fromJSON(toJSON(plik2), flatten = T)
+str(plik2_flatten,4)
+```
+
+Uzyjmy pakietu purrr aby wyciągnać pewne informacje
+
+```{r}
+plik2 %>%
+   map("sport") %>%
+   map("q1") %>%
+   map("options") 
+
+plik2 %>%
+   map("maths") %>%
+   map("q1") %>%
+   map("question") 
+
+```
+
+```{r}
+plik2[["quiz"]][["sport"]][["q1"]][["options"]]
+```
+
+Użyjmy teraz tidyjson
+
+```{r}
+plik1 %>% toJSON() %>% as.character() %>% as.tbl_json() %>% spread_all(recursive = T)
+```
+
+Wczytujemy ofertę pracy z JSON
+
+```{r}
+pracuj_oferta <- jsonlite::read_json(path = "../data-raw/pracuj-oferta.json")
+str(pracuj_oferta,5)
+```
+
+```{r}
+pracuj_ofert_df <- pracuj_oferta[[1]] %>% fromJSON(flatten = T)
+cat(pracuj_ofert_df$offerReducer$offer$textTemplate$jobTitleDescription)
+```
+
+Historia wyszukiwania na YT
+
+
+```{r}
+histora <- jsonlite::fromJSON("../data-raw/Takeout/YouTube i YouTube Music/historia/historia oglądania.json")
+head(histora)
+```
+
+```{r}
+histora$time <- ymd_hms(histora$time)
+```
+
+```{r}
+histora$time_rounded <- round_date(histora$time, unit = "day")
+histora
+```
+
+```{r}
+barplot(table(histora$time_rounded))
+```
+
