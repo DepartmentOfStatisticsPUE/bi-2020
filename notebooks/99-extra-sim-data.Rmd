@@ -10,6 +10,7 @@ output: html_notebook
 library(car)
 library(mlogit)
 library(tidyr)
+library(maxLik)
 ```
 
 # Symulacja danych
@@ -154,4 +155,19 @@ sample_sel <- df_long[df_long$id %in% df[resp == 1,"id"],]
 prop.table(table(sample_sel$mode))
 prop.table(table(df_long$mode))
 ```
+
+## Estymacja modelu wielomianowego 
+
+```{r} 
+## selection indicator 
+df$sel <- resp
+df_mlogit <- gather(df, alt, value, y1:y3) %>% dplyr::arrange(id)
+head(df_mlogit)
+
+mlogit_model1 <- mlogit(value ~ 0 | x1 + x2, data = df_mlogit, 
+                        chid.var = "id",  alt.var="alt", choice = "value",  shape = "long")
+
+summary(mlogit_model1)
+```
+
 
