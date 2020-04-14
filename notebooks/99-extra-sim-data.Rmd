@@ -1,0 +1,53 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+# Simulate data 
+
+## From binomial case
+
+Generate Y variable
+$$
+Pr(Y == 1) = \frac{\exp(\beta_0 + \beta_1x_1 + \beta_2x_2)}{1 + \exp(\beta_0 + \beta_1x_1 + \beta_2x_2)} = \frac{\exp(\eta)}{1+\exp(\eta)}
+$$
+
+Generate response indicator
+
+$$
+Pr(R == 1) =  \frac{\exp(\gamma_0 + \gamma_1Y)}{1 + \exp(\gamma_0 + \gamma_1Y)} = \frac{\exp(\zeta)}{1 + \exp{\zeta}}
+$$
+```{r}
+set.seed(123)
+
+## target variable
+n <- 100000
+x1 <- rnorm(n, mean = 2, sd = 0.5)
+x2 <- rchisq(n = n, df = 3)
+beta0 <- 1.5
+beta1 <- -0.5
+beta2 <- -0.5
+eta <- beta0 + beta1*x1 + beta2*x2
+y <- rbinom(n, size = 1, prob = exp(eta) / (1 + exp(eta)))
+table(y)
+
+## response indicator
+gamma0 <- -1.5
+gamma1 <- 1.5
+zeta <- gamma0 + gamma1*y
+resp <- rbinom(n, size = 1, prob = exp(zeta)/(1 + exp(zeta)))
+table(resp)
+
+## crosstab
+xtabs(~ resp + y)
+```
+
+sample data 
+
+```{r}
+population <- data.frame(y = y, x1, x2, resp)
+sample <- subset(population, resp == 1)
+mean(sample$y)
+mean(population$y)
+```
+
