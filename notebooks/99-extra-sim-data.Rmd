@@ -1,27 +1,37 @@
 ---
-title: "R Notebook"
+author: "Maciej Beręsewicz"
+title: "Symulacje danych z rozkładu dwumianoweg"
 output: html_notebook
 ---
 
-# Simulate data 
+# Pakiety
 
-## From binomial case
+```{r}
+library(car)
+library(mlogit)
+library(tidyr)
+```
 
-Generate Y variable
+# Symulacja danych
+
+## Symulujemy z rozkładu dwumianowego
+
+Generujemy zmienną Y
+
 $$
 Pr(Y == 1) = \frac{\exp(\beta_0 + \beta_1x_1 + \beta_2x_2)}{1 + \exp(\beta_0 + \beta_1x_1 + \beta_2x_2)} = \frac{\exp(\eta)}{1+\exp(\eta)}
 $$
 
-Generate response indicator
+Generujemy indykator przynależności do próby (response indicator)
 
 $$
-Pr(R == 1) =  \frac{\exp(\gamma_0 + \gamma_1Y)}{1 + \exp(\gamma_0 + \gamma_1Y)} = \frac{\exp(\zeta)}{1 + \exp{\zeta}}
+Pr(R == 1) =  \frac{\exp(\gamma_0 + \gamma_1Y)}{1 + \exp(\gamma_0 + \gamma_1Y)} = \frac{\exp(\zeta)}{1 + \exp(\zeta)}
 $$
 ```{r}
 set.seed(123)
 
 ## target variable
-n <- 100000
+n <- 10000
 x1 <- rnorm(n, mean = 2, sd = 0.5)
 x2 <- rchisq(n = n, df = 3)
 beta0 <- 1.5
@@ -47,7 +57,101 @@ sample data
 ```{r}
 population <- data.frame(y = y, x1, x2, resp)
 sample <- subset(population, resp == 1)
+#sample size 
+nrow(sample) / n
+## naive estimate
 mean(sample$y)
+## true value
 mean(population$y)
+```
+
+Sprawdzmy czy nasze dane populacji odtwarzają parametry
+
+```{r}
+model_pop <- glm(y ~ x1 + x2, data = population, family = binomial())
+model_sam <- glm(y ~ x1 + x2, data = sample, family = binomial())
+```
+
+```{r}
+compareCoefs(model_pop, model_sam, se = F)
+```
+
+
+## Rozkład wielomianowy 
+
+$$
+Pr(Y_k == 1) = \frac{\exp(\beta_{k0} + \beta_{k1}x_1 + \beta_{k2}x_2)}{1 + \sum_{K}^{K-1}\exp(\beta_{k0} + \beta_{k1}x_1 + \beta_{k2}x_2)} = \frac{\exp(\eta_k)}{1+\sum_{k}^{K-1}\exp(\eta_k)}
+$$
+
+
+Załóżmy, że mamy trzy kategorie (i.e Twitter, no social media, Facebook)
+
+```{r}
+set.seed(123)
+
+n <- 10000
+x1 <- sample(x = 0:1, size = n, replace = TRUE, prob = c(0.7, 0.3))
+x2 <- sample(x = 0:1, size = n, replace = TRUE, prob = c(0.2, 0.8))
+
+beta_02 <- -1
+beta_03 <- -1
+
+beta_12 <- 2
+beta_13 <- 3
+
+beta_22 <- 2
+beta_23 <- 1
+
+eta_1 <- 1
+eta_2 <- beta_02 + beta_12*x1  + beta_22*x2
+eta_3 <- beta_03 + beta_13*x1  + beta_23*x2
+
+
+p2 <- exp(eta_2) / (1 + exp(eta_2) + exp(eta_3))
+p3 <- exp(eta_3) / (1 + exp(eta_2) + exp(eta_3))
+p1 <- 1-(p2+p3)
+
+probs <- cbind(p1,p2,p3)
+
+d <- apply(probs, MARGIN = 1, FUN = function(x) rmultinom(n = 1, size = 1, prob = x))
+d <- t(d)
+colSums(d)
+df <- cbind(d, x1, x2)
+df <- as.data.frame(df)
+colnames(df) <- c("y1","y2","y3", "x1", "x2")
+df$id <- 1:nrow(df)
+df_long <- df %>% gather(mode, sel, y1:y3) %>% dplyr::filter(sel == 1)
+
+```
+
+Sprawdzmy czy poprawnie odtworzymy parametry -- TAK
+
+```{r}
+summary(multinom(mode ~ x1 + x2, data = df_long))
+```
+
+Tworzymy teraz response indicator, który bedzie ujemnie związany z brakiem social media
+
+$$
+Pr(R == 1) =  \frac{\exp(\gamma_0 + \gamma_1Y_2 + \gamma_2Y_1)}{1 + \exp(\gamma_0 + \gamma_1Y_2 + \gamma_2Y_1)} = \frac{\exp(\zeta)}{1 + \exp(\zeta)}
+$$
+
+
+```{r}
+set.seed(123)
+## response indicator
+gamma0 <- 0.5
+gamma1 <- -2
+gamma2 <- 2
+zeta <- gamma0 + gamma1*(df$y2) + gamma2*df$y1
+resp <- rbinom(n, size = 1, prob = exp(zeta)/(1 + exp(zeta)))
+table(resp)
+
+## wyciągamy te, które zależą od zeta
+sample_sel <- df_long[df_long$id %in% df[resp == 1,"id"],]
+
+## porównanie rozkładów -- w próbie oraz w populacji
+prop.table(table(sample_sel$mode))
+prop.table(table(df_long$mode))
 ```
 
