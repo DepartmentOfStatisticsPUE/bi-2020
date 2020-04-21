@@ -1,0 +1,182 @@
+---
+title: "Badania symulacyjne"
+author: "Maciej Beręsewicz"
+output: html_notebook
+---
+
+
+# Pakiety
+
+```{r}
+library(car)
+library(mlogit)
+library(tidyr)
+library(maxLik)
+library(optimParallel)
+library(nloptr)
+```
+
+# Symulacja danych
+
+## Przykłady
+
+**Przykład 1** -- załóżmy, że chcemy zbadać czy Polacy są zadowoleni z bieżącej sytuacji politycznej na podstawie social media. Dla uproszczenie załóżmy, że dysponujemy zmienną binarną przyjmującą wartości 1 = Tak, 0 = Nie. Dodatkowo, mamy dwie zmienne $x_1$ wiek oraz $x_2$ dochód. Załóżmy dodatkowo, że bardziej aktywni w Internecie będą zwolennicy danego rządu i oszacowania zapewne będą odbiegać od wartości w populacji. Na potrzeby weryfikacji jakości metod musimy takie dane sobie wygenerować.
+
+**Przykład 2** -- zmienna o charakterze nominalnym.
+
+## Symulujemy z rozkładu dwumianowego
+
+
+Generujemy zmienną Y z 
+
+$$
+Pr(Y == 1) = \frac{\exp(\beta_0 + \beta_1x_1 + \beta_2x_2)}{1 + \exp(\beta_0 + \beta_1x_1 + \beta_2x_2)} = \frac{\exp(\eta)}{1+\exp(\eta)}
+$$
+
+Generujemy indykator przynależności do próby (response indicator)
+
+$$
+Pr(R == 1) =  \frac{\exp(\gamma_0 + \gamma_1Y)}{1 + \exp(\gamma_0 + \gamma_1Y)} = \frac{\exp(\zeta)}{1 + \exp(\zeta)}
+$$
+```{r}
+set.seed(123)
+
+## target variable
+n <- 10000
+x1 <- rnorm(n, mean = 2, sd = 0.5)
+x2 <- rchisq(n = n, df = 3)
+beta0 <- 1.5
+beta1 <- -0.5
+beta2 <- -0.5
+eta <- beta0 + beta1*x1 + beta2*x2
+y <- rbinom(n, size = 1, prob = exp(eta) / (1 + exp(eta)))
+table(y)
+
+## response indicator
+gamma0 <- -1.5
+gamma1 <- 1.5
+zeta <- gamma0 + gamma1*y
+resp <- rbinom(n, size = 1, prob = exp(zeta)/(1 + exp(zeta)))
+table(resp)
+
+## crosstab
+xtabs(~ resp + y)
+```
+
+sample data 
+
+```{r}
+population <- data.frame(y = y, x1, x2, resp)
+sample <- subset(population, resp == 1)
+#sample size 
+nrow(sample) / n
+## naive estimate
+mean(sample$y)
+## true value
+mean(population$y)
+```
+
+Sprawdzmy czy nasze dane populacji odtwarzają parametry
+
+```{r}
+model_pop <- glm(y ~ x1 + x2, data = population, family = binomial())
+model_sam <- glm(y ~ x1 + x2, data = sample, family = binomial())
+```
+
+```{r}
+compareCoefs(model_pop, model_sam, se = F)
+```
+
+Jeżeli nie uwzględnimy sample selection to otrzymujemy obciążone oszacowania
+
+## Rozkład wielomianowy 
+
+$$
+Pr(Y_k == 1) = \frac{\exp(\beta_{k0} + \beta_{k1}x_1 + \beta_{k2}x_2)}{1 + \sum_{K}^{K-1}\exp(\beta_{k0} + \beta_{k1}x_1 + \beta_{k2}x_2)} = \frac{\exp(\eta_k)}{1+\sum_{k}^{K-1}\exp(\eta_k)}
+$$
+
+
+Tworzymy teraz response indicator, który bedzie ujemnie związany z brakiem social media
+
+$$
+Pr(R == 1) =  \frac{\exp(\gamma_0 + \gamma_1Y_2 + \gamma_2Y_1)}{1 + \exp(\gamma_0 + \gamma_1Y_2 + \gamma_2Y_1)} = \frac{\exp(\zeta)}{1 + \exp(\zeta)}
+$$
+
+
+
+Załóżmy, że mamy trzy kategorie (i.e Twitter, no social media, Facebook)
+
+```{r}
+set.seed(666)
+
+n <- 10000
+x1 <- rbinom(n = n, size = 1, prob = 0.7)
+x2 <- rbinom(n = n, size = 1, prob = 0.2)
+
+beta_02 <- -1
+beta_03 <- -1
+
+beta_12 <- 2
+beta_13 <- 3
+
+beta_22 <- 2
+beta_23 <- 1
+
+eta_1 <- 1
+eta_2 <- beta_02 + beta_12*x1  + beta_22*x2
+eta_3 <- beta_03 + beta_13*x1  + beta_23*x2
+
+
+p2 <- exp(eta_2) / (1 + exp(eta_2) + exp(eta_3))
+p3 <- exp(eta_3) / (1 + exp(eta_2) + exp(eta_3))
+p1 <- 1-(p2+p3)
+
+probs <- cbind(p1,p2,p3)
+
+d <- apply(probs, MARGIN = 1, FUN = function(x) rmultinom(n = 1, size = 1, prob = x))
+d <- t(d)
+df <- cbind(d, x1, x2)
+df <- as.data.frame(df)
+colnames(df) <- c("y1","y2","y3", "x1", "x2")
+df$id <- 1:nrow(df)
+df$y <- ifelse(df$y1 == 1, 1, ifelse(df$y2 == 1, 2, 3))
+table(df$y)
+
+gamma0 <- 0.5
+gamma1 <- -1
+gamma2 <- 2
+zeta <- gamma0 + gamma1*(df$y2) #+ gamma2*df$y2
+resp <- rbinom(n, size = 1, prob = exp(zeta)/(1 + exp(zeta)))
+table(resp)
+df$zeta <- zeta
+df$resp <- resp
+
+xtabs(~resp+y,df)
+
+
+```
+
+
+
+## Estymacja modelu wielomianowego 
+
+Sprawdzmy czy poprawnie odtworzymy parametry -- z wykorzystaniem pakietu NNET
+
+```{r}
+coef(summary(nnet::multinom(y ~ x1 + x2, data = df, trace = F)))
+
+coef(summary(nnet::multinom(y ~ x1 + x2, data = subset(df, resp == 1), trace = F)))
+
+```
+
+To samo ale z wykorzystaniem pakietu mlogit
+
+```{r} 
+df_mlogit <- gather(df, alt, value, y1:y3) %>% dplyr::arrange(id)
+head(df_mlogit)
+
+mlogit_model1 <- mlogit(value ~ 0 | x1 + x2, data = subset(df_mlogit, resp == 1), 
+                        chid.var = "id",  alt.var="alt", choice = "value",  shape = "long")
+
+summary(mlogit_model1)
+```

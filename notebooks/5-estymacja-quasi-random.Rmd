@@ -1,0 +1,177 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(survey) ## do post-stratyfikacji i kalibracji
+library(rpart)
+```
+
+# Generowanie danych populacji i big data
+
+Aby zweryfikować czy dana metoda działa i w jaki sposób należy wykonać badanie symulacyjne. W niniejszym przykładzie generujemy dane według następującego algorytmu
+
+$$
+\begin{cases}
+X_{i1} &\sim Bernoulli(p = 0.45) \\
+X_{i2} &\sim Poisson(\lambda = 2) \\
+X_{i3} &\sim Bernoulli(p = 0.7) \\
+\epsilon+i &\sim N(0, 10) \\
+Y_i   &= 200 + 200 + 20*X_{i1} - 30*X_{i3} + \epsilon_i \\
+\rho_i &= \frac{\exp(10 + X_{i2} - 15*X_{i3})}{1 + \exp(10 + X_{i2} - 15*X_{i3})} \\
+R_i &\sim Bernoulli(p = \rho_i)
+\end{cases}
+
+$$
+
+gdzie: $X_1$ to zmienna przyjmująca wartości $\{0,1\}$ gdzie $P(X_1 == 1) = 0.45$, $X_2$ pochodzi z rozkładu Poissona z parametrem $\lambda=2$, $X_3$ to zmienna przyjmująca wartości $\{0,1\}$ gdzie $P(X_2 == 1) = 0.7$. Następnie generujemy wektor $\epsilon$, który oznacza reszty z modelu. 
+
+Następnie tworzymy zmienną celu $Y$, a natępnie zakładamy, ze tworzymy nielosową próbę o liczebności 365k co stanowi ~36% całej populacji o wielkości 1 mln.
+
+
+```{r}
+set.seed(123)
+N_pop <- 1e6
+## generuję dane dla populacji
+X_1 <- rbinom(n = N_pop, size = 1, prob = 0.45) ## płeć
+X_2 <- rpois(n = N_pop, lambda = 2) ## liczba dzieci
+X_3 <- rbinom(n = N_pop, size = 1, prob = 0.7) ## miejsce zamieszkania (1=wies, 0=miasto)
+Y <- 200 + 20*X_1 - 30*X_3 + rnorm(n = N_pop, mean = 0, sd = 10)
+pop_data <- data.frame(Y = Y, X_1 = factor(X_1), X_2, X_3 = factor(X_3))
+summary(pop_data)
+
+## generuję zmienna określającą przynależnosć do big data
+delta <- rbinom(n = N_pop, size = 1, 
+                prob = exp(10 + X_2 - 15*X_3) / (1 + exp(10 + X_2 - 15*X_3)))
+
+prop.table(table(delta))
+big_data_inc <- which(delta == 1)
+big_data <- pop_data[big_data_inc,]
+big_data$waga <- nrow(pop_data)/nrow(big_data)
+
+```
+
+```{r}
+mean(big_data$Y)
+mean(pop_data$Y)
+```
+
+
+# Post-stratyfikacja
+
+```{r}
+big_data_svy <- svydesign(id = ~1, weights = ~ waga, strata= ~X_1 + X_3, data = big_data)
+big_data_svy
+```
+
+Podajemy dane z populacji
+
+```{r}
+pop_x1 <- xtabs(~X_1, pop_data)
+pop_x3 <- xtabs(~X_3, pop_data)
+pop_x1x3 <- xtabs(~X_1+ X_3, pop_data)
+pop_x2 <- sum(pop_data$X_2)
+```
+
+```{r}
+res <- postStratify(design = big_data_svy, ~X_1+ X_3, pop_x1x3)
+svytable(~X_1+X_3, res)
+summary(weights(res))
+```
+
+```{r}
+svymean(~Y, res)[1]
+```
+
+# Kalibracja
+
+W przypadku liniowej funkcji dostajemy te te same wagi co z post-stratyfikacji
+```{r}
+res_calib <- calibrate(big_data_svy, 
+                       formula = list(~X_1), 
+                       population = list(pop_x1), 
+                       calfun = cal.linear)
+
+svymean(~Y, res_calib)
+summary(weights(res_calib))
+```
+
+Mała symulacja
+
+```{r}
+B <- 10
+wynik_post <- numeric(B)
+wynik_naive <- numeric(B)
+for (i in 1:B) {
+  set.seed(i)
+  delta <- rbinom(n = N_pop, size = 1, 
+                prob = exp(10 - 2.5*X_2 - 15*X_3) / (1 + exp(10 - 2.5*X_2 - 15*X_3)))
+  big_data <- pop_data[delta==1,]
+  big_data$waga <- nrow(pop_data)/nrow(big_data)
+  big_data_svy <- svydesign(id = ~1, weights = ~ waga, strata= ~X_1 + X_3, data = big_data)
+  res <- postStratify(design = big_data_svy, ~X_1 + X_3, pop_x1x3)
+  wynik_post[i] <- svymean(~Y, res)[1]
+  wynik_naive[i] <- mean(big_data$Y)
+}
+
+
+
+c(srednia_proba = mean(wynik_naive), 
+  srednia_post = mean(wynik_post),
+  wartosc_praw = mean(Y_1))
+
+boxplot(cbind(wynik_naive, wynik_post))
+```
+
+# Propensity score weighting
+
+## Przygotowanie danych
+
+```{r}
+rest_data <- pop_data[-big_data_inc,]
+big_data$waga <- NULL
+big_data$flag <- 1
+rest_data$flag <- 0
+
+df <- rbind(big_data,rest_data)
+df$flag <- factor(df$flag)
+table(df$flag)
+```
+
+## Regresja logistyczna
+
+
+Budujemy model objaśniajacy flag == 1
+
+```{r}
+m0 <- glm(flag ~ X_2 + X_3, data = df, family = binomial())
+summary(m0)
+```
+
+```{r}
+df$waga <- fitted(m0)^-1
+summary(df$waga)
+```
+
+
+```{r}
+with(subset(df, flag == 1), weighted.mean(Y, waga))
+```
+
+## drzewo regresyjne
+
+```{r}
+m2 <- rpart(flag ~ X_1 + X_2+ X_3, 
+            data = df,
+            method = "class")
+m2
+
+
+predictions <- predict(m2)
+df$waga2 <- predictions[,2]^-1
+
+with(subset(df, flag == 1), weighted.mean(Y, waga2))
+
+```
+
