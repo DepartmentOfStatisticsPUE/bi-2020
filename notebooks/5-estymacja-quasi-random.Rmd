@@ -1,5 +1,6 @@
 ---
-title: "R Notebook"
+author: "Maciej Beręsewicz"
+title: "Metody quasi-randomizacyjne -- symulacje i estymacja"
 output: html_notebook
 ---
 
@@ -17,12 +18,11 @@ $$
 X_{i1} &\sim Bernoulli(p = 0.45) \\
 X_{i2} &\sim Poisson(\lambda = 2) \\
 X_{i3} &\sim Bernoulli(p = 0.7) \\
-\epsilon+i &\sim N(0, 10) \\
-Y_i   &= 200 + 200 + 20*X_{i1} - 30*X_{i3} + \epsilon_i \\
-\rho_i &= \frac{\exp(10 + X_{i2} - 15*X_{i3})}{1 + \exp(10 + X_{i2} - 15*X_{i3})} \\
+\epsilon_i &\sim N(0, 10) \\
+Y_i   &= 200 + 20 \times X_{i1} - 30 \times X_{i3} + \epsilon_i \\
+\rho_i &= \frac{\exp(10 + X_{i2} - 15 \times X_{i3})}{1 + \exp(10 + X_{i2} - 15 \times X_{i3})} \\
 R_i &\sim Bernoulli(p = \rho_i)
 \end{cases}
-
 $$
 
 gdzie: $X_1$ to zmienna przyjmująca wartości $\{0,1\}$ gdzie $P(X_1 == 1) = 0.45$, $X_2$ pochodzi z rozkładu Poissona z parametrem $\lambda=2$, $X_3$ to zmienna przyjmująca wartości $\{0,1\}$ gdzie $P(X_2 == 1) = 0.7$. Następnie generujemy wektor $\epsilon$, który oznacza reszty z modelu. 
@@ -37,18 +37,21 @@ N_pop <- 1e6
 X_1 <- rbinom(n = N_pop, size = 1, prob = 0.45) ## płeć
 X_2 <- rpois(n = N_pop, lambda = 2) ## liczba dzieci
 X_3 <- rbinom(n = N_pop, size = 1, prob = 0.7) ## miejsce zamieszkania (1=wies, 0=miasto)
-Y <- 200 + 20*X_1 - 30*X_3 + rnorm(n = N_pop, mean = 0, sd = 10)
+epsilon <- rnorm(n = N_pop, mean = 0, sd = 10)
+Y <- 200 + 20*X_1 - 30*X_3 + epsilon
 pop_data <- data.frame(Y = Y, X_1 = factor(X_1), X_2, X_3 = factor(X_3))
-summary(pop_data)
+dim(pop_data)
 
 ## generuję zmienna określającą przynależnosć do big data
-delta <- rbinom(n = N_pop, size = 1, 
-                prob = exp(10 + X_2 - 15*X_3) / (1 + exp(10 + X_2 - 15*X_3)))
+rho <-  exp(10 + X_2 - 15*X_3) / (1 + exp(10 + X_2 - 15*X_3))
+R <- rbinom(n = N_pop, size = 1,  prob = rho)
 
-prop.table(table(delta))
-big_data_inc <- which(delta == 1)
+sum(R)
+
+prop.table(table(R))
+big_data_inc <- which(R == 1)
 big_data <- pop_data[big_data_inc,]
-big_data$waga <- nrow(pop_data)/nrow(big_data)
+big_data$waga <- nrow(pop_data)/nrow(big_data) ## WAGA = N / n
 
 ```
 
@@ -57,12 +60,22 @@ mean(big_data$Y)
 mean(pop_data$Y)
 ```
 
+```{r}
+head(big_data)
+```
+
 
 # Post-stratyfikacja
 
 ```{r}
 big_data_svy <- svydesign(id = ~1, weights = ~ waga, strata= ~X_1 + X_3, data = big_data)
 big_data_svy
+```
+
+Jak wyglądają dane z populacji
+
+```{r}
+head(pop_data)
 ```
 
 Podajemy dane z populacji
@@ -74,14 +87,32 @@ pop_x1x3 <- xtabs(~X_1+ X_3, pop_data)
 pop_x2 <- sum(pop_data$X_2)
 ```
 
+Zrobimy kilka przykłdów:
+
+- post-stratyfikcja wg x1
+- post-stratyfikacja wg x3
+- post-stratyfikacja wg x1 i x3
+
 ```{r}
-res <- postStratify(design = big_data_svy, ~X_1+ X_3, pop_x1x3)
-svytable(~X_1+X_3, res)
-summary(weights(res))
+przyklad1 <- postStratify(design = big_data_svy, strata =  ~X_1, population = pop_x1)
+przyklad3 <- postStratify(design = big_data_svy, strata =  ~X_3, population = pop_x3)
+przyklad4 <- postStratify(design = big_data_svy, strata =  ~X_1+X_3, population = pop_x1x3)
+
+cat(" === próba big data bez korekty === \n")
+svymean(~ Y, big_data_svy) ## przed post-stratyfikacją 
+cat(" === próba big data z korektą na X1 === \n")
+svymean(~ Y, przyklad1) ## po wykorzystaniu zmiennej X1
+cat(" === próba big data z korektą na X3 === \n")
+svymean(~ Y, przyklad3) ## po wykorzystaniu zmiennej X3
+cat(" === próba big data z korektą na X1 i X3 === \n")
+svymean(~ Y, przyklad4) ## po wykorzystaniu zmiennej X1 i X3
+
+
 ```
 
 ```{r}
-svymean(~Y, res)[1]
+table(weights(big_data_svy)) ## wagi przed post-stratyfikacją
+table(weights(przyklad4)) ## wagi po post-stratyfikacji
 ```
 
 # Kalibracja
