@@ -1,0 +1,76 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+bkl <- readRDS("bkl-oferty-zajecia.rds")
+table(bkl$forma_ogl)
+```
+
+```{r}
+install.packages("vcd")
+library(vcd)
+```
+
+```{r}
+tab1 <- xtabs(~kod_zawodu_grupa + jezyk_wymagany, data = bkl)
+assocstats(tab1)
+```
+
+```{r}
+tab2 <- xtabs(~kod_zawodu_grupa + komp_kier, data = bkl)
+assocstats(tab2)
+```
+
+```{r}
+gus <- c(2.2, 11, 5.4, 6.5, 6.7, 0.1, 12,7.2,3.1)
+gus_df <- data.frame(kod_zawodu_grupa = 1:9,
+                     pop = gus)
+gus_df <- subset(gus_df, kod_zawodu_grupa != 6)
+```
+
+```{r}
+install.packages("survey")
+library(survey)
+```
+
+```{r}
+bkl$kod_zawodu_grupa <- as.character(bkl$kod_zawodu_grupa)
+gus_df$kod_zawodu_grupa <- as.character(gus_df$kod_zawodu_grupa)
+```
+
+1. zadeklarować obiekt klasy svydesign na podstawie danych bkl
+
+```{r}
+bkl_surv <- svydesign(id = ~1, data = bkl)
+```
+
+2. utworzyć tabelę z danymi populacyjnymi (fun. xtabs)
+
+```{r}
+pop_tab <- xtabs(pop ~ kod_zawodu_grupa, data = gus_df)
+```
+
+
+3. zastosować funkcję calibrate lub postStratify
+
+```{r}
+bkl_surv_cal <- calibrate(design = bkl_surv, 
+                          formula=list(~kod_zawodu_grupa),
+                          population = list(pop_tab))
+
+bkl_surv_cal
+```
+
+4. oszacować nasze zmienne celu (Y)
+
+```{r}
+svymean(~komp_kier + komp_ind + jezyk_wymagany, bkl_surv)
+svymean(~komp_kier + komp_ind +jezyk_wymagany, bkl_surv_cal)
+```
+
+```{r}
+bkl
+```
+
