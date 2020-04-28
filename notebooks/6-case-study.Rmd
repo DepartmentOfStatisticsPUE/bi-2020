@@ -4,73 +4,102 @@ output: html_notebook
 ---
 
 ```{r}
-bkl <- readRDS("bkl-oferty-zajecia.rds")
-table(bkl$forma_ogl)
-```
-
-```{r}
-install.packages("vcd")
+library(tidyverse)
+library(survey)
 library(vcd)
 ```
 
 ```{r}
-tab1 <- xtabs(~kod_zawodu_grupa + jezyk_wymagany, data = bkl)
-assocstats(tab1)
+bkl <- readRDS("../data-raw/bkl-oferty-zajecia.rds")
+head(bkl)
+```
+
+1. jeżeli chcemy zredukować obciążenie to musimy znaleźć takie X, które są silnie skorelowane z badaną przez nas cechą. Jeżeli chodzi o X to mamy dwie zmienne, które występują w źródle niezależnym
+
++ zawód
++ województwo
+
+Weryfikujemy korelacje z wykorzysaniem statystyki $\chi^2$ oraz miary V Cramera. Można również zastosować modele log-liniowe albo regresję logistyczną
+
+```{r}
+tab1 <- xtabs(~ komp_ind + kod_zawodu_grupa, data = bkl)
+tab2 <- xtabs(~ komp_ind + woj2, data = bkl)
+prop.table(tab1, margin = 2)
+tab2
 ```
 
 ```{r}
-tab2 <- xtabs(~kod_zawodu_grupa + komp_kier, data = bkl)
+assocstats(tab1)
 assocstats(tab2)
 ```
 
 ```{r}
-gus <- c(2.2, 11, 5.4, 6.5, 6.7, 0.1, 12,7.2,3.1)
-gus_df <- data.frame(kod_zawodu_grupa = 1:9,
-                     pop = gus)
+gus <- c(2.2, 11, 5.4, 6.5, 6.7, 0.1, 12, 7.2, 3.1)*1000
+gus_df <- data.frame(kod_zawodu_grupa = as.character(1:9),
+                     pop = gus, 
+                     stringsAsFactors = F)
 gus_df <- subset(gus_df, kod_zawodu_grupa != 6)
+gus_df
 ```
 
 ```{r}
-install.packages("survey")
-library(survey)
+gus_df %>% 
+  left_join(bkl %>% count(kod_zawodu_grupa=as.character(kod_zawodu_grupa), name = "bkl")) %>%
+  mutate(bkl = bkl)
 ```
+
+1. Dodajemy wagę d (pseudo-wagę) do zbioru BKL
 
 ```{r}
-bkl$kod_zawodu_grupa <- as.character(bkl$kod_zawodu_grupa)
-gus_df$kod_zawodu_grupa <- as.character(gus_df$kod_zawodu_grupa)
+bkl <- bkl %>% mutate(d = sum(gus) / nrow(bkl),
+                      kod_zawodu_grupa = as.character(kod_zawodu_grupa))
 ```
 
-1. zadeklarować obiekt klasy svydesign na podstawie danych bkl
+2. zadeklarować obiekt klasy svydesign na podstawie danych bkl
 
 ```{r}
-bkl_surv <- svydesign(id = ~1, data = bkl)
+bkl_surv <- svydesign(id = ~1, weights = ~ d, data = bkl)
+bkl_surv
 ```
 
-2. utworzyć tabelę z danymi populacyjnymi (fun. xtabs)
+3. utworzyć tabelę z danymi populacyjnymi (fun. xtabs)
 
 ```{r}
 pop_tab <- xtabs(pop ~ kod_zawodu_grupa, data = gus_df)
+pop_tab
 ```
 
-
-3. zastosować funkcję calibrate lub postStratify
+4. zastosować funkcję calibrate lub postStratify
 
 ```{r}
-bkl_surv_cal <- calibrate(design = bkl_surv, 
-                          formula=list(~kod_zawodu_grupa),
-                          population = list(pop_tab))
+bkl_surv_cal <- calibrate(design = bkl_surv,
+                          formula = list( ~ kod_zawodu_grupa),
+                          population = list( pop_tab ))
 
 bkl_surv_cal
 ```
 
-4. oszacować nasze zmienne celu (Y)
+5. Czy odtworzyliśmy wartości globalne
 
 ```{r}
-svymean(~komp_kier + komp_ind + jezyk_wymagany, bkl_surv)
-svymean(~komp_kier + komp_ind +jezyk_wymagany, bkl_surv_cal)
+svytotal(~ kod_zawodu_grupa, bkl_surv_cal)
+```
+
+6. Jak wyglądają wagi
+
+```{r}
+table(weights(bkl_surv_cal))
+```
+
+7. oszacować nasze zmienne celu (Y)
+
+```{r}
+svymean(~ komp_ind, bkl_surv)
+svymean(~ komp_ind, bkl_surv_cal)
 ```
 
 ```{r}
-bkl
+svymean(~ komp_inter + komp_ind + komps_kier + jezyk_angielski, bkl_surv)
+svymean(~ komp_inter + komp_ind + komp_kier + jezyk_angielski, bkl_surv_cal)
 ```
 

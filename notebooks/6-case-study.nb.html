@@ -1751,137 +1751,164 @@ summary {
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxudGFibGUoYmtsJGZvcm1hX29nbClcblxuYGBgIn0= -->
-<pre class="r"><code>table(bkl$forma_ogl)
-</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiXG4gICAgMCAgICAgMSBcbiA4NDQ2IDEyODkzIFxuIn0= -->
-<pre><code>
-    0     1 
- 8446 12893 </code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeSh2Y2QpXG5cbmBgYCJ9 -->
-<pre class="r"><code>library(vcd)
-</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiTG9hZGluZyByZXF1aXJlZCBwYWNrYWdlOiBncmlkXG4ifQ== -->
-<pre><code>Loading required package: grid</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxudGFiMSA8LSB4dGFicyh+a29kX3phd29kdV9ncnVwYSArIGplenlrX3d5bWFnYW55LCBkYXRhID0gYmtsKVxuYXNzb2NzdGF0cyh0YWIxKVxuYGBgIn0= -->
-<pre class="r"><code>tab1 &lt;- xtabs(~kod_zawodu_grupa + jezyk_wymagany, data = bkl)
-assocstats(tab1)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiICAgICAgICAgICAgICAgICAgICBYXjIgZGYgUCg+IFheMilcbkxpa2VsaWhvb2QgUmF0aW8gMjc4Ni4yICA3ICAgICAgICAwXG5QZWFyc29uICAgICAgICAgIDI2MzAuNiAgNyAgICAgICAgMFxuXG5QaGktQ29lZmZpY2llbnQgICA6IE5BIFxuQ29udGluZ2VuY3kgQ29lZmYuOiAwLjMzMSBcbkNyYW1lcidzIFYgICAgICAgIDogMC4zNTEgXG4ifQ== -->
-<pre><code>                    X^2 df P(&gt; X^2)
-Likelihood Ratio 2786.2  7        0
-Pearson          2630.6  7        0
-
-Phi-Coefficient   : NA 
-Contingency Coeff.: 0.331 
-Cramer&#39;s V        : 0.351 </code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxudGFiMiA8LSB4dGFicyh+a29kX3phd29kdV9ncnVwYSArIGtvbXBfa2llciwgZGF0YSA9IGJrbClcbmFzc29jc3RhdHModGFiMilcbmBgYCJ9 -->
-<pre class="r"><code>tab2 &lt;- xtabs(~kod_zawodu_grupa + komp_kier, data = bkl)
-assocstats(tab2)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiICAgICAgICAgICAgICAgICAgICBYXjIgZGYgUCg+IFheMilcbkxpa2VsaWhvb2QgUmF0aW8gMjYwNy41ICA3ICAgICAgICAwXG5QZWFyc29uICAgICAgICAgIDIxNzAuOSAgNyAgICAgICAgMFxuXG5QaGktQ29lZmZpY2llbnQgICA6IE5BIFxuQ29udGluZ2VuY3kgQ29lZmYuOiAwLjMwNCBcbkNyYW1lcidzIFYgICAgICAgIDogMC4zMTkgXG4ifQ== -->
-<pre><code>                    X^2 df P(&gt; X^2)
-Likelihood Ratio 2607.5  7        0
-Pearson          2170.9  7        0
-
-Phi-Coefficient   : NA 
-Contingency Coeff.: 0.304 
-Cramer&#39;s V        : 0.319 </code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZ3VzIDwtIGMoMi4yLCAxMSwgNS40LCA2LjUsIDYuNywgMC4xLCAxMiw3LjIsMy4xKVxuZ3VzX2RmIDwtIGRhdGEuZnJhbWUoa29kX3phd29kdV9ncnVwYSA9IDE6OSxcbiAgICAgICAgICAgICAgICAgICAgIHBvcCA9IGd1cylcbmd1c19kZiA8LSBzdWJzZXQoZ3VzX2RmLCBrb2RfemF3b2R1X2dydXBhICE9IDYpXG5gYGAifQ== -->
-<pre class="r"><code>gus &lt;- c(2.2, 11, 5.4, 6.5, 6.7, 0.1, 12,7.2,3.1)
-gus_df &lt;- data.frame(kod_zawodu_grupa = 1:9,
-                     pop = gus)
-gus_df &lt;- subset(gus_df, kod_zawodu_grupa != 6)</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeSh0aWR5dmVyc2UpXG5saWJyYXJ5KHN1cnZleSlcbmxpYnJhcnkodmNkKVxuYGBgIn0= -->
+<pre class="r"><code>library(tidyverse)
+library(survey)
+library(vcd)</code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShzdXJ2ZXkpXG5cbmBgYCJ9 -->
-<pre class="r"><code>library(survey)
-</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoicGFja2FnZSDigJhzdXJ2ZXnigJkgd2FzIGJ1aWx0IHVuZGVyIFIgdmVyc2lvbiAzLjYuMkxvYWRpbmcgcmVxdWlyZWQgcGFja2FnZTogTWF0cml4XG5cbkF0dGFjaGluZyBwYWNrYWdlOiDigJhNYXRyaXjigJlcblxuVGhlIGZvbGxvd2luZyBvYmplY3RzIGFyZSBtYXNrZWQgZnJvbSDigJhwYWNrYWdlOnRpZHly4oCZOlxuXG4gICAgZXhwYW5kLCBwYWNrLCB1bnBhY2tcblxuTG9hZGluZyByZXF1aXJlZCBwYWNrYWdlOiBzdXJ2aXZhbFxucGFja2FnZSDigJhzdXJ2aXZhbOKAmSB3YXMgYnVpbHQgdW5kZXIgUiB2ZXJzaW9uIDMuNi4yXG5BdHRhY2hpbmcgcGFja2FnZTog4oCYc3VydmV54oCZXG5cblRoZSBmb2xsb3dpbmcgb2JqZWN0IGlzIG1hc2tlZCBmcm9tIOKAmHBhY2thZ2U6Z3JhcGhpY3PigJk6XG5cbiAgICBkb3RjaGFydFxuIn0= -->
-<pre><code>package ‘survey’ was built under R version 3.6.2Loading required package: Matrix
-
-Attaching package: ‘Matrix’
-
-The following objects are masked from ‘package:tidyr’:
-
-    expand, pack, unpack
-
-Loading required package: survival
-package ‘survival’ was built under R version 3.6.2
-Attaching package: ‘survey’
-
-The following object is masked from ‘package:graphics’:
-
-    dotchart</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYmtsJGtvZF96YXdvZHVfZ3J1cGEgPC0gYXMuY2hhcmFjdGVyKGJrbCRrb2RfemF3b2R1X2dydXBhKVxuZ3VzX2RmJGtvZF96YXdvZHVfZ3J1cGEgPC0gYXMuY2hhcmFjdGVyKGd1c19kZiRrb2RfemF3b2R1X2dydXBhKVxuYGBgIn0= -->
-<pre class="r"><code>bkl$kod_zawodu_grupa &lt;- as.character(bkl$kod_zawodu_grupa)
-gus_df$kod_zawodu_grupa &lt;- as.character(gus_df$kod_zawodu_grupa)</code></pre>
-<!-- rnb-source-end -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6eyJjbGFzc2VzIjpbImRhdGEuZnJhbWUiXSwibmNvbCI6MjcsIm5yb3ciOjZ9LCJyZGYiOiJINHNJQUFBQUFBQUFBKzFXUVcvVE1CUjIycWEwUWUwcTREWU9ISkZZQXhvN1RBS0pIQkRhR1lHMFcrUW1idW9tc1NNblVaZjhHZjRpdjJEd2t0aWhOa1ByRUdJY2lQVDYrWDM1dm1mN3hZbjY4ZjNsYStmU1FRZ04wWEJzb2FFTlEyUi8vdlJoZVk3UWFBQ0poVVpvMnVBVmlCN0Q0QmhpRGpIMnZsdzFhblFvS3QrN3IxMXlLQ29mdXZ0MUw3NjlkZitWK2Y0MTM2K2UzNkY5dWV0enY2SHV2ZlRGVzNTSjkxemlpWUhuZXQ3N25rbitUT0piQXk4a3Z2a3o2L3p2dTlublBlbVNIcDhhT05FUkx1ZVcrYnE2dDB6dUdiaFgxektrbG96ZlhLLzJRYmNaVGtrT2d3VnFQdW9kT1FreEk3N2dzY3luYXk1UzdQTW9VWUtZcDVsZjQ1MFN0SGxCZ28wbVNIR2hDZUl5TVFqNDBSd3hqM1FCSlVJU1RrdFFWdlRNUkRLaGxxOXByVG5DS3MrNFZuUkZTMVZpdE9QYlUzVXo0NkVnRWVWTUVrZGJVbGV4ajFsRVNaTEhWTkx6amhZOHI3WS9XQ2xtbEtTVUJEMjk2T2dOemVzTXM1L2thNEZaVUpvMDlma3FJRDVPVkw4WE1RK2Jkdk93OUNOUlpsaGZ5cTVLY1lSWkpkbUg3UzRUR3RRckpaeTFsTlFSU1Q0eXEvcW54dW1ZQ3I1ejFRbVp0Y2ZSdW5nQmNRS3hoSEFoWGtLOE1vOVZrT0JjSFN0Rk9pRXVzQXRiVGdsazE0YmxBYzhLNkQyWUJzMGZETnN3VzhJZ2prcldyQ3hjQnB1U3hjc3orY0tvbDJNbWNidzNQdTZtSEh5VHBXeFpha3pnRWZkdHNSTzhJcXJ6YytoQTJ3QTNFM0QyMUU2QXpkMkNGMWpwbklBbmltbjNocTYvQTJMbnhPZFhDUUFBIn0= -->
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["dane_rok"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["forma_ogl"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["komp_zaw"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["komp_tech"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["komp_mat"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["komp_kult"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["komp_komp"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["komp_kog"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["komp_kier"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["komp_inter"],"name":[10],"type":["dbl"],"align":["right"]},{"label":["komp_ind"],"name":[11],"type":["dbl"],"align":["right"]},{"label":["komp_fiz"],"name":[12],"type":["dbl"],"align":["right"]},{"label":["komp_dyspo"],"name":[13],"type":["dbl"],"align":["right"]},{"label":["komp_biur"],"name":[14],"type":["dbl"],"align":["right"]},{"label":["woj2"],"name":[15],"type":["dbl"],"align":["right"]},{"label":["podregion"],"name":[16],"type":["dbl"],"align":["right"]},{"label":["jezyk_angielski"],"name":[17],"type":["dbl"],"align":["right"]},{"label":["jezyk_rosyjski"],"name":[18],"type":["dbl"],"align":["right"]},{"label":["jezyk_niemiecki"],"name":[19],"type":["dbl"],"align":["right"]},{"label":["jezyk_hiszpanski"],"name":[20],"type":["dbl"],"align":["right"]},{"label":["jezyk_francuski"],"name":[21],"type":["dbl"],"align":["right"]},{"label":["jezyki_obce_all"],"name":[22],"type":["dbl"],"align":["right"]},{"label":["kod_zawodu_grupa"],"name":[23],"type":["dbl"],"align":["right"]},{"label":["jezyk_wymagany"],"name":[24],"type":["lgl"],"align":["right"]},{"label":["komp_liczba"],"name":[25],"type":["dbl"],"align":["right"]},{"label":["komp_wymagane"],"name":[26],"type":["lgl"],"align":["right"]},{"label":["kod_zawodu_grupa_2"],"name":[27],"type":["dbl"],"align":["right"]}],"data":[{"1":"2014","2":"1","3":"0","4":"0","5":"0","6":"1","7":"0","8":"0","9":"0","10":"0","11":"1","12":"0","13":"0","14":"0","15":"4","16":"8","17":"0","18":"0","19":"0","20":"0","21":"0","22":"0","23":"5","24":"FALSE","25":"2","26":"TRUE","27":"5","_rn_":"84011"},{"1":"2014","2":"1","3":"0","4":"0","5":"0","6":"0","7":"0","8":"0","9":"0","10":"0","11":"0","12":"0","13":"0","14":"0","15":"12","16":"20","17":"0","18":"0","19":"0","20":"0","21":"0","22":"0","23":"5","24":"FALSE","25":"0","26":"FALSE","27":"5","_rn_":"84012"},{"1":"2014","2":"1","3":"0","4":"0","5":"0","6":"0","7":"0","8":"0","9":"0","10":"0","11":"0","12":"0","13":"0","14":"0","15":"14","16":"28","17":"0","18":"0","19":"0","20":"0","21":"0","22":"0","23":"7","24":"FALSE","25":"0","26":"FALSE","27":"7","_rn_":"84013"},{"1":"2014","2":"1","3":"0","4":"0","5":"0","6":"0","7":"0","8":"0","9":"0","10":"0","11":"0","12":"0","13":"0","14":"0","15":"14","16":"28","17":"0","18":"0","19":"0","20":"0","21":"0","22":"0","23":"7","24":"FALSE","25":"0","26":"FALSE","27":"7","_rn_":"84014"},{"1":"2014","2":"1","3":"0","4":"0","5":"0","6":"0","7":"0","8":"0","9":"0","10":"1","11":"0","12":"1","13":"0","14":"0","15":"24","16":"48","17":"0","18":"0","19":"0","20":"0","21":"0","22":"0","23":"3","24":"FALSE","25":"2","26":"TRUE","27":"3","_rn_":"84015"},{"1":"2014","2":"1","3":"0","4":"0","5":"0","6":"0","7":"0","8":"0","9":"0","10":"1","11":"1","12":"0","13":"0","14":"0","15":"14","16":"27","17":"0","18":"0","19":"0","20":"0","21":"0","22":"0","23":"3","24":"FALSE","25":"2","26":"TRUE","27":"3","_rn_":"84016"}],"options":{"columns":{"min":{},"max":[10],"total":[27]},"rows":{"min":[10],"max":[10],"total":[6]},"pages":{}}}
+  </script>
+</div>
+<!-- rnb-frame-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <ol style="list-style-type: decimal">
+<li>jeżeli chcemy zredukować obciążenie to musimy znaleźć takie X, które są silnie skorelowane z badaną przez nas cechą. Jeżeli chodzi o X to mamy dwie zmienne, które występują w źródle niezależnym</li>
+</ol>
+<ul>
+<li>zawód</li>
+<li>województwo</li>
+</ul>
+<p>Weryfikujemy korelacje z wykorzysaniem statystyki <span class="math inline">\(\chi^2\)</span> oraz miary V Cramera. Można również zastosować modele log-liniowe albo regresję logistyczną</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucHJvcC50YWJsZSh0YWIxLCBtYXJnaW4gPSAyKVxuXG5gYGAifQ== -->
+<pre class="r"><code>prop.table(tab1, margin = 2)
+</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiICAgICAgICBrb2RfemF3b2R1X2dydXBhXG5rb21wX2luZCAgICAgICAgIDEgICAgICAgICAyICAgICAgICAgMyAgICAgICAgIDQgICAgICAgICA1ICAgICAgICAgNyAgICAgICAgIDggICAgICAgICA5XG4gICAgICAgMCAwLjQ2MTI0NzYgMC40MzQwNTc4IDAuMzY4MTE1MSAwLjU2NDI2NTUgMC41MjU5MTAyIDAuODQ4MDM1OCAwLjg4MjkyMDEgMC44NTEyMzk3XG4gICAgICAgMSAwLjUzODc1MjQgMC41NjU5NDIyIDAuNjMxODg0OSAwLjQzNTczNDUgMC40NzQwODk4IDAuMTUxOTY0MiAwLjExNzA3OTkgMC4xNDg3NjAzXG4ifQ== -->
+<pre><code>        kod_zawodu_grupa
+komp_ind         1         2         3         4         5         7         8         9
+       0 0.4612476 0.4340578 0.3681151 0.5642655 0.5259102 0.8480358 0.8829201 0.8512397
+       1 0.5387524 0.5659422 0.6318849 0.4357345 0.4740898 0.1519642 0.1170799 0.1487603</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYXNzb2NzdGF0cyh0YWIxKVxuYGBgIn0= -->
+<pre class="r"><code>assocstats(tab1)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiICAgICAgICAgICAgICAgICAgICBYXjIgZGYgUCg+IFheMilcbkxpa2VsaWhvb2QgUmF0aW8gMzEwNC41ICA3ICAgICAgICAwXG5QZWFyc29uICAgICAgICAgIDI4MzcuNiAgNyAgICAgICAgMFxuXG5QaGktQ29lZmZpY2llbnQgICA6IE5BIFxuQ29udGluZ2VuY3kgQ29lZmYuOiAwLjM0MyBcbkNyYW1lcidzIFYgICAgICAgIDogMC4zNjUgXG4ifQ== -->
+<pre><code>                    X^2 df P(&gt; X^2)
+Likelihood Ratio 3104.5  7        0
+Pearson          2837.6  7        0
+
+Phi-Coefficient   : NA 
+Contingency Coeff.: 0.343 
+Cramer&#39;s V        : 0.365 </code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYXNzb2NzdGF0cyh0YWIyKVxuYGBgIn0= -->
+<pre class="r"><code>assocstats(tab2)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiICAgICAgICAgICAgICAgICAgICBYXjIgZGYgUCg+IFheMilcbkxpa2VsaWhvb2QgUmF0aW8gNDA4LjQyIDE1ICAgICAgICAwXG5QZWFyc29uICAgICAgICAgIDQwNC43MSAxNSAgICAgICAgMFxuXG5QaGktQ29lZmZpY2llbnQgICA6IE5BIFxuQ29udGluZ2VuY3kgQ29lZmYuOiAwLjEzNiBcbkNyYW1lcidzIFYgICAgICAgIDogMC4xMzggXG4ifQ== -->
+<pre><code>                    X^2 df P(&gt; X^2)
+Likelihood Ratio 408.42 15        0
+Pearson          404.71 15        0
+
+Phi-Coefficient   : NA 
+Contingency Coeff.: 0.136 
+Cramer&#39;s V        : 0.138 </code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZ3VzIDwtIGMoMi4yLCAxMSwgNS40LCA2LjUsIDYuNywgMC4xLCAxMiwgNy4yLCAzLjEpKjEwMDBcbmd1c19kZiA8LSBkYXRhLmZyYW1lKGtvZF96YXdvZHVfZ3J1cGEgPSBhcy5jaGFyYWN0ZXIoMTo5KSxcbiAgICAgICAgICAgICAgICAgICAgIHBvcCA9IGd1cywgXG4gICAgICAgICAgICAgICAgICAgICBzdHJpbmdzQXNGYWN0b3JzID0gRilcbmd1c19kZiA8LSBzdWJzZXQoZ3VzX2RmLCBrb2RfemF3b2R1X2dydXBhICE9IDYpXG5ndXNfZGZcbmBgYCJ9 -->
+<pre class="r"><code>gus &lt;- c(2.2, 11, 5.4, 6.5, 6.7, 0.1, 12, 7.2, 3.1)*1000
+gus_df &lt;- data.frame(kod_zawodu_grupa = as.character(1:9),
+                     pop = gus, 
+                     stringsAsFactors = F)
+gus_df &lt;- subset(gus_df, kod_zawodu_grupa != 6)
+gus_df</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6eyJjbGFzc2VzIjpbImRhdGEuZnJhbWUiXSwibmNvbCI6MiwibnJvdyI6OH0sInJkZiI6Ikg0c0lBQUFBQUFBQUE0MVNTMDdETUJSOCtiVk5KTnBLM2JEa0FDUUNzZW15QzhRQkVFamRSVzdzaHFqQmpweEVSWWpMc09NQ0xFQnNVVy9ERVFwTy9Dd2xXYkd3eHA3bkdjOTd5ZTMxK2lwWUJ3RGdnRE95d1BIVUZyejd1NXR3Q2VEYTZtQ0JDMzZEVCtyU1FtMGE4Z2ZSRkdlVWJabVVqTVpsSlRPZURzcnVocFFNdVpPV0I1aXJkZXh3RStUdE5velNORUhVR21QTjcyZ0J0ZE9tdG5xOWFJblY5NHZHOTFPTkgxVGo1N25HUTZIeDYwemoyeEt0ZW4xNm5EeXlFZ1BhU001M2dzYlBaQzlvSGFleUxnanlUaUdLZ2Q2WFloOFpqMzgyMWcrUTVLUTBBUXdaVUZLUmFDdVZyKzY5SnhtTG9zb0VWeUo3Z2U1ZHNTVUh4S3ptVFVJYUpnODEzNFdYelFPWTB1cU1lZExaMi9wSjl4ZXRQTFFhTVo1bW5KbnNPZG13SEE5VE5ZbDJFRkdoL29uS2RLTFlNcXBFUmN5OUlCRzVZZlIzUGY0QnhVZ2ZWNWdDQUFBPSJ9 -->
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["kod_zawodu_grupa"],"name":[1],"type":["chr"],"align":["left"]},{"label":["pop"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"1","2":"2200","_rn_":"1"},{"1":"2","2":"11000","_rn_":"2"},{"1":"3","2":"5400","_rn_":"3"},{"1":"4","2":"6500","_rn_":"4"},{"1":"5","2":"6700","_rn_":"5"},{"1":"7","2":"12000","_rn_":"7"},{"1":"8","2":"7200","_rn_":"8"},{"1":"9","2":"3100","_rn_":"9"}],"options":{"columns":{"min":{},"max":[10],"total":[2]},"rows":{"min":[10],"max":[10],"total":[8]},"pages":{}}}
+  </script>
+</div>
+<!-- rnb-frame-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZ3VzX2RmICU+JSBcbiAgbGVmdF9qb2luKGJrbCAlPiUgY291bnQoa29kX3phd29kdV9ncnVwYT1hcy5jaGFyYWN0ZXIoa29kX3phd29kdV9ncnVwYSksIG5hbWUgPSBcImJrbFwiKSkgJT4lXG4gIG11dGF0ZShia2wgPSBia2wpXG5cbmBgYCJ9 -->
+<pre class="r"><code>gus_df %&gt;% 
+  left_join(bkl %&gt;% count(kod_zawodu_grupa=as.character(kod_zawodu_grupa), name = &quot;bkl&quot;)) %&gt;%
+  mutate(bkl = bkl)
+</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiSm9pbmluZywgYnkgPSBcImtvZF96YXdvZHVfZ3J1cGFcIlxuIn0= -->
+<pre><code>Joining, by = &quot;kod_zawodu_grupa&quot;</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6eyJjbGFzc2VzIjpbImRhdGEuZnJhbWUiXSwibmNvbCI6MywibnJvdyI6OH0sInJkZiI6Ikg0c0lBQUFBQUFBQUExMVJUVXZEUUJDZGZOVTJZaTNxd1lzZ25tMndWakhlZWhDOWkwcHZaZHZFR2hKM1F6Nm9pQWZCaTMvRG13ZXZIaFN2b3IrcU9wdmRVVWdnZVc5bTUrTzk3T25Sc084T1hRQ3d3R29ZWURsSXdUay9PKzc2QUxhSmdRRTJ0Q1RlWU5GcVZRblF3YmRKQnowaXUwVDZSUGFJN0JNNUlPSVRPY1JQVzg0YlBPM0k3VEQ0dkZQNHVxN3dMVkQ0dnEzd0sxWDRzYW53MlFmOUxGVzZ3TjRDV0huQXNSdG81aEZnN1FSZzhRTDVDOHIvcmhsek9Mc09jMjNLMHNsT0xJTFJMWnVKb0J4TnN6SmxPbStsSWlVNmpwUGFxRlltWmg2Tmsxck1lNldyV2Q4NVNWaE9PeW5wQnF4ZzNtV0cvUmpOYXkwTElpMGl3YkhKbExmZzFKcU5ySlpZTHJsVUVuUW5WeVdQdXoyNW9EcisvMU9HVXZiSExiWFMvTkdqSEQycUVmSnB4RVBTbnJCeG1PaWdqWTRydzE2YVJid2dKNWpOdlVJVWpPcmNpVWdvVTNtRCtTOU1WMkQ4ZkFJQUFBPT0ifQ== -->
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["kod_zawodu_grupa"],"name":[1],"type":["chr"],"align":["left"]},{"label":["pop"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["bkl"],"name":[3],"type":["int"],"align":["right"]}],"data":[{"1":"1","2":"2200","3":"1058"},{"1":"2","2":"11000","3":"4739"},{"1":"3","2":"5400","3":"3613"},{"1":"4","2":"6500","3":"1416"},{"1":"5","2":"6700","3":"5191"},{"1":"7","2":"12000","3":"2902"},{"1":"8","2":"7200","3":"1452"},{"1":"9","2":"3100","3":"968"}],"options":{"columns":{"min":{},"max":[10],"total":[3]},"rows":{"min":[10],"max":[10],"total":[8]},"pages":{}}}
+  </script>
+</div>
+<!-- rnb-frame-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<ol style="list-style-type: decimal">
+<li>Dodajemy wagę d (pseudo-wagę) do zbioru BKL</li>
+</ol>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYmtsIDwtIGJrbCAlPiUgbXV0YXRlKGQgPSBzdW0oZ3VzKSAvIG5yb3coYmtsKSxcbiAgICAgICAgICAgICAgICAgICAgICBrb2RfemF3b2R1X2dydXBhID0gYXMuY2hhcmFjdGVyKGtvZF96YXdvZHVfZ3J1cGEpKVxuYGBgIn0= -->
+<pre class="r"><code>bkl &lt;- bkl %&gt;% mutate(d = sum(gus) / nrow(bkl),
+                      kod_zawodu_grupa = as.character(kod_zawodu_grupa))</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<ol start="2" style="list-style-type: decimal">
 <li>zadeklarować obiekt klasy svydesign na podstawie danych bkl</li>
 </ol>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYmtsX3N1cnYgPC0gc3Z5ZGVzaWduKGlkID0gfjEsIGRhdGEgPSBia2wpXG5gYGAifQ== -->
-<pre class="r"><code>bkl_surv &lt;- svydesign(id = ~1, data = bkl)</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYmtsX3N1cnYgPC0gc3Z5ZGVzaWduKGlkID0gfjEsIHdlaWdodHMgPSB+IGQsIGRhdGEgPSBia2wpXG5ia2xfc3VydlxuYGBgIn0= -->
+<pre class="r"><code>bkl_surv &lt;- svydesign(id = ~1, weights = ~ d, data = bkl)
+bkl_surv</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiTm8gd2VpZ2h0cyBvciBwcm9iYWJpbGl0aWVzIHN1cHBsaWVkLCBhc3N1bWluZyBlcXVhbCBwcm9iYWJpbGl0eVxuIn0= -->
-<pre><code>No weights or probabilities supplied, assuming equal probability</code></pre>
+<!-- rnb-output-begin eyJkYXRhIjoiSW5kZXBlbmRlbnQgU2FtcGxpbmcgZGVzaWduICh3aXRoIHJlcGxhY2VtZW50KVxuc3Z5ZGVzaWduKGlkID0gfjEsIHdlaWdodHMgPSB+ZCwgZGF0YSA9IGJrbClcbiJ9 -->
+<pre><code>Independent Sampling design (with replacement)
+svydesign(id = ~1, weights = ~d, data = bkl)</code></pre>
 <!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
-<ol start="2" style="list-style-type: decimal">
+<ol start="3" style="list-style-type: decimal">
 <li>utworzyć tabelę z danymi populacyjnymi (fun. xtabs)</li>
 </ol>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucG9wX3RhYiA8LSB4dGFicyhwb3AgfiBrb2RfemF3b2R1X2dydXBhLCBkYXRhID0gZ3VzX2RmKVxuYGBgIn0= -->
-<pre class="r"><code>pop_tab &lt;- xtabs(pop ~ kod_zawodu_grupa, data = gus_df)</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucG9wX3RhYiA8LSB4dGFicyhwb3AgfiBrb2RfemF3b2R1X2dydXBhLCBkYXRhID0gZ3VzX2RmKVxucG9wX3RhYlxuYGBgIn0= -->
+<pre class="r"><code>pop_tab &lt;- xtabs(pop ~ kod_zawodu_grupa, data = gus_df)
+pop_tab</code></pre>
 <!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoia29kX3phd29kdV9ncnVwYVxuICAgIDEgICAgIDIgICAgIDMgICAgIDQgICAgIDUgICAgIDcgICAgIDggICAgIDkgXG4gMjIwMCAxMTAwMCAgNTQwMCAgNjUwMCAgNjcwMCAxMjAwMCAgNzIwMCAgMzEwMCBcbiJ9 -->
+<pre><code>kod_zawodu_grupa
+    1     2     3     4     5     7     8     9 
+ 2200 11000  5400  6500  6700 12000  7200  3100 </code></pre>
+<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
-<ol start="3" style="list-style-type: decimal">
+<ol start="4" style="list-style-type: decimal">
 <li>zastosować funkcję calibrate lub postStratify</li>
 </ol>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYmtsX3N1cnZfY2FsIDwtIGNhbGlicmF0ZShkZXNpZ24gPSBia2xfc3VydiwgXG4gICAgICAgICAgICAgICAgICAgICAgICAgIGZvcm11bGE9bGlzdCh+a29kX3phd29kdV9ncnVwYSksXG4gICAgICAgICAgICAgICAgICAgICAgICAgIHBvcHVsYXRpb24gPSBsaXN0KHBvcF90YWIpKVxuXG5ia2xfc3Vydl9jYWxcbmBgYCJ9 -->
-<pre class="r"><code>bkl_surv_cal &lt;- calibrate(design = bkl_surv, 
-                          formula=list(~kod_zawodu_grupa),
-                          population = list(pop_tab))
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYmtsX3N1cnZfY2FsIDwtIGNhbGlicmF0ZShkZXNpZ24gPSBia2xfc3VydixcbiAgICAgICAgICAgICAgICAgICAgICAgICAgZm9ybXVsYSA9IGxpc3QoIH4ga29kX3phd29kdV9ncnVwYSksXG4gICAgICAgICAgICAgICAgICAgICAgICAgIHBvcHVsYXRpb24gPSBsaXN0KCBwb3BfdGFiICkpXG5cbmJrbF9zdXJ2X2NhbFxuYGBgIn0= -->
+<pre class="r"><code>bkl_surv_cal &lt;- calibrate(design = bkl_surv,
+                          formula = list( ~ kod_zawodu_grupa),
+                          population = list( pop_tab ))
 
 bkl_surv_cal</code></pre>
 <!-- rnb-source-end -->
@@ -1892,43 +1919,92 @@ calibrate(design = bkl_surv, formula = list(~kod_zawodu_grupa),
 <!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
-<ol start="4" style="list-style-type: decimal">
+<ol start="5" style="list-style-type: decimal">
+<li>Czy odtworzyliśmy wartości globalne</li>
+</ol>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc3Z5dG90YWwofiBrb2RfemF3b2R1X2dydXBhLCBia2xfc3Vydl9jYWwpXG5gYGAifQ== -->
+<pre class="r"><code>svytotal(~ kod_zawodu_grupa, bkl_surv_cal)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiICAgICAgICAgICAgICAgICAgdG90YWwgU0VcbmtvZF96YXdvZHVfZ3J1cGExICAyMjAwICAwXG5rb2RfemF3b2R1X2dydXBhMiAxMTAwMCAgMFxua29kX3phd29kdV9ncnVwYTMgIDU0MDAgIDBcbmtvZF96YXdvZHVfZ3J1cGE0ICA2NTAwICAwXG5rb2RfemF3b2R1X2dydXBhNSAgNjcwMCAgMFxua29kX3phd29kdV9ncnVwYTcgMTIwMDAgIDBcbmtvZF96YXdvZHVfZ3J1cGE4ICA3MjAwICAwXG5rb2RfemF3b2R1X2dydXBhOSAgMzEwMCAgMFxuIn0= -->
+<pre><code>                  total SE
+kod_zawodu_grupa1  2200  0
+kod_zawodu_grupa2 11000  0
+kod_zawodu_grupa3  5400  0
+kod_zawodu_grupa4  6500  0
+kod_zawodu_grupa5  6700  0
+kod_zawodu_grupa7 12000  0
+kod_zawodu_grupa8  7200  0
+kod_zawodu_grupa9  3100  0</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<ol start="6" style="list-style-type: decimal">
+<li>Jak wyglądają wagi</li>
+</ol>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxudGFibGUod2VpZ2h0cyhia2xfc3Vydl9jYWwpKVxuYGBgIn0= -->
+<pre class="r"><code>table(weights(bkl_surv_cal))</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiXG4gMS4yOTA2OTU0MzQ0MDU2IDEuNDk0NjAyODIzMTM4NjggMi4wNzkzOTUwODUwNjM1NCAyLjMyMTE2NDgwMjcwMDk4IDMuMjAyNDc5MzM4ODQyOTcgNC4xMzUwNzkyNTU2ODU2NiA0LjU5MDM5NTQ4MDIyNTk0IFxuICAgICAgICAgICAgNTE5MSAgICAgICAgICAgICAzNjEzICAgICAgICAgICAgIDEwNTggICAgICAgICAgICAgNDczOSAgICAgICAgICAgICAgOTY4ICAgICAgICAgICAgIDI5MDIgICAgICAgICAgICAgMTQxNiBcbjQuOTU4Njc3Njg1OTUwMzUgXG4gICAgICAgICAgICAxNDUyIFxuIn0= -->
+<pre><code>
+ 1.2906954344056 1.49460282313868 2.07939508506354 2.32116480270098 3.20247933884297 4.13507925568566 4.59039548022594 
+            5191             3613             1058             4739              968             2902             1416 
+4.95867768595035 
+            1452 </code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<ol start="7" style="list-style-type: decimal">
 <li>oszacować nasze zmienne celu (Y)</li>
 </ol>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc3Z5bWVhbih+a29tcF9raWVyICsga29tcF9pbmQgKyBqZXp5a193eW1hZ2FueSwgYmtsX3N1cnYpXG5gYGAifQ== -->
-<pre class="r"><code>svymean(~komp_kier + komp_ind + jezyk_wymagany, bkl_surv)</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc3Z5bWVhbih+IGtvbXBfaW5kLCBia2xfc3VydilcbmBgYCJ9 -->
+<pre class="r"><code>svymean(~ komp_ind, bkl_surv)</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiICAgICAgICAgICAgICAgICAgICAgICBtZWFuICAgICBTRVxua29tcF9raWVyICAgICAgICAgICAwLjE5NjU0IDAuMDAyN1xua29tcF9pbmQgICAgICAgICAgICAwLjQzOTAxIDAuMDAzNFxuamV6eWtfd3ltYWdhbnlGQUxTRSAwLjc5NDE4IDAuMDAyOFxuamV6eWtfd3ltYWdhbnlUUlVFICAwLjIwNTgyIDAuMDAyOFxuIn0= -->
-<pre><code>                       mean     SE
-komp_kier           0.19654 0.0027
-komp_ind            0.43901 0.0034
-jezyk_wymaganyFALSE 0.79418 0.0028
-jezyk_wymaganyTRUE  0.20582 0.0028</code></pre>
+<!-- rnb-output-begin eyJkYXRhIjoiICAgICAgICAgICAgbWVhbiAgICAgU0VcbmtvbXBfaW5kIDAuNDM5MDEgMC4wMDM0XG4ifQ== -->
+<pre><code>            mean     SE
+komp_ind 0.43901 0.0034</code></pre>
 <!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc3Z5bWVhbih+a29tcF9raWVyICsga29tcF9pbmQgK2plenlrX3d5bWFnYW55LCBia2xfc3Vydl9jYWwpXG5gYGAifQ== -->
-<pre class="r"><code>svymean(~komp_kier + komp_ind +jezyk_wymagany, bkl_surv_cal)</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc3Z5bWVhbih+IGtvbXBfaW5kLCBia2xfc3Vydl9jYWwpXG5gYGAifQ== -->
+<pre class="r"><code>svymean(~ komp_ind, bkl_surv_cal)</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiICAgICAgICAgICAgICAgICAgICAgICBtZWFuICAgICBTRVxua29tcF9raWVyICAgICAgICAgICAwLjE1MTg1IDAuMDAyMlxua29tcF9pbmQgICAgICAgICAgICAwLjM2ODkzIDAuMDAzMlxuamV6eWtfd3ltYWdhbnlGQUxTRSAwLjgxMjgwIDAuMDAyNlxuamV6eWtfd3ltYWdhbnlUUlVFICAwLjE4NzIwIDAuMDAyNlxuIn0= -->
-<pre><code>                       mean     SE
-komp_kier           0.15185 0.0022
-komp_ind            0.36893 0.0032
-jezyk_wymaganyFALSE 0.81280 0.0026
-jezyk_wymaganyTRUE  0.18720 0.0026</code></pre>
+<!-- rnb-output-begin eyJkYXRhIjoiICAgICAgICAgICAgbWVhbiAgICAgU0VcbmtvbXBfaW5kIDAuMzY4OTMgMC4wMDMyXG4ifQ== -->
+<pre><code>            mean     SE
+komp_ind 0.36893 0.0032</code></pre>
 <!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYmtsXG5gYGAifQ== -->
-<pre class="r"><code>bkl</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc3Z5bWVhbih+IGtvbXBfaW50ZXIgKyBrb21wX2luZCArIGtvbXBfa2llciArIGplenlrX2FuZ2llbHNraSwgYmtsX3N1cnYpXG5gYGAifQ== -->
+<pre class="r"><code>svymean(~ komp_inter + komp_ind + komp_kier + jezyk_angielski, bkl_surv)</code></pre>
 <!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiICAgICAgICAgICAgICAgICAgIG1lYW4gICAgIFNFXG5rb21wX2ludGVyICAgICAgMC40MDExMCAwLjAwMzRcbmtvbXBfaW5kICAgICAgICAwLjQzOTAxIDAuMDAzNFxua29tcF9raWVyICAgICAgIDAuMTk2NTQgMC4wMDI3XG5qZXp5a19hbmdpZWxza2kgMC4xODk5MyAwLjAwMjdcbiJ9 -->
+<pre><code>                   mean     SE
+komp_inter      0.40110 0.0034
+komp_ind        0.43901 0.0034
+komp_kier       0.19654 0.0027
+jezyk_angielski 0.18993 0.0027</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc3Z5bWVhbih+IGtvbXBfaW50ZXIgKyBrb21wX2luZCArIGtvbXBfa2llciArIGplenlrX2FuZ2llbHNraSwgYmtsX3N1cnZfY2FsKVxuYGBgIn0= -->
+<pre class="r"><code>svymean(~ komp_inter + komp_ind + komp_kier + jezyk_angielski, bkl_surv_cal)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiICAgICAgICAgICAgICAgICAgIG1lYW4gICAgIFNFXG5rb21wX2ludGVyICAgICAgMC4zMTQ0NyAwLjAwMjhcbmtvbXBfaW5kICAgICAgICAwLjM2ODkzIDAuMDAzMlxua29tcF9raWVyICAgICAgIDAuMTUxODUgMC4wMDIyXG5qZXp5a19hbmdpZWxza2kgMC4xNzAyNSAwLjAwMjVcbiJ9 -->
+<pre><code>                   mean     SE
+komp_inter      0.31447 0.0028
+komp_ind        0.36893 0.0032
+komp_kier       0.15185 0.0022
+jezyk_angielski 0.17025 0.0025</code></pre>
+<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiUiBOb3RlYm9vayIKb3V0cHV0OiBodG1sX25vdGVib29rCi0tLQoKYGBge3J9CmJrbCA8LSByZWFkUkRTKCJia2wtb2ZlcnR5LXphamVjaWEucmRzIikKdGFibGUoYmtsJGZvcm1hX29nbCkKYGBgCgpgYGB7cn0KaW5zdGFsbC5wYWNrYWdlcygidmNkIikKbGlicmFyeSh2Y2QpCmBgYAoKYGBge3J9CnRhYjEgPC0geHRhYnMofmtvZF96YXdvZHVfZ3J1cGEgKyBqZXp5a193eW1hZ2FueSwgZGF0YSA9IGJrbCkKYXNzb2NzdGF0cyh0YWIxKQpgYGAKCmBgYHtyfQp0YWIyIDwtIHh0YWJzKH5rb2RfemF3b2R1X2dydXBhICsga29tcF9raWVyLCBkYXRhID0gYmtsKQphc3NvY3N0YXRzKHRhYjIpCmBgYAoKYGBge3J9Cmd1cyA8LSBjKDIuMiwgMTEsIDUuNCwgNi41LCA2LjcsIDAuMSwgMTIsNy4yLDMuMSkKZ3VzX2RmIDwtIGRhdGEuZnJhbWUoa29kX3phd29kdV9ncnVwYSA9IDE6OSwKICAgICAgICAgICAgICAgICAgICAgcG9wID0gZ3VzKQpndXNfZGYgPC0gc3Vic2V0KGd1c19kZiwga29kX3phd29kdV9ncnVwYSAhPSA2KQpgYGAKCmBgYHtyfQppbnN0YWxsLnBhY2thZ2VzKCJzdXJ2ZXkiKQpsaWJyYXJ5KHN1cnZleSkKYGBgCgpgYGB7cn0KYmtsJGtvZF96YXdvZHVfZ3J1cGEgPC0gYXMuY2hhcmFjdGVyKGJrbCRrb2RfemF3b2R1X2dydXBhKQpndXNfZGYka29kX3phd29kdV9ncnVwYSA8LSBhcy5jaGFyYWN0ZXIoZ3VzX2RmJGtvZF96YXdvZHVfZ3J1cGEpCmBgYAoKMS4gemFkZWtsYXJvd2HEhyBvYmlla3Qga2xhc3kgc3Z5ZGVzaWduIG5hIHBvZHN0YXdpZSBkYW55Y2ggYmtsCgpgYGB7cn0KYmtsX3N1cnYgPC0gc3Z5ZGVzaWduKGlkID0gfjEsIGRhdGEgPSBia2wpCmBgYAoKMi4gdXR3b3J6ecSHIHRhYmVsxJkgeiBkYW55bWkgcG9wdWxhY3lqbnltaSAoZnVuLiB4dGFicykKCmBgYHtyfQpwb3BfdGFiIDwtIHh0YWJzKHBvcCB+IGtvZF96YXdvZHVfZ3J1cGEsIGRhdGEgPSBndXNfZGYpCmBgYAoKCjMuIHphc3Rvc293YcSHIGZ1bmtjasSZIGNhbGlicmF0ZSBsdWIgcG9zdFN0cmF0aWZ5CgpgYGB7cn0KYmtsX3N1cnZfY2FsIDwtIGNhbGlicmF0ZShkZXNpZ24gPSBia2xfc3VydiwgCiAgICAgICAgICAgICAgICAgICAgICAgICAgZm9ybXVsYT1saXN0KH5rb2RfemF3b2R1X2dydXBhKSwKICAgICAgICAgICAgICAgICAgICAgICAgICBwb3B1bGF0aW9uID0gbGlzdChwb3BfdGFiKSkKCmJrbF9zdXJ2X2NhbApgYGAKCjQuIG9zemFjb3dhxIcgbmFzemUgem1pZW5uZSBjZWx1IChZKQoKYGBge3J9CnN2eW1lYW4ofmtvbXBfa2llciArIGtvbXBfaW5kICsgamV6eWtfd3ltYWdhbnksIGJrbF9zdXJ2KQpzdnltZWFuKH5rb21wX2tpZXIgKyBrb21wX2luZCAramV6eWtfd3ltYWdhbnksIGJrbF9zdXJ2X2NhbCkKYGBgCgpgYGB7cn0KYmtsCmBgYAoK</div>
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiUiBOb3RlYm9vayIKb3V0cHV0OiBodG1sX25vdGVib29rCi0tLQoKYGBge3J9CmxpYnJhcnkodGlkeXZlcnNlKQpsaWJyYXJ5KHN1cnZleSkKbGlicmFyeSh2Y2QpCmBgYAoKYGBge3J9CmJrbCA8LSByZWFkUkRTKCIuLi9kYXRhLXJhdy9ia2wtb2ZlcnR5LXphamVjaWEucmRzIikKaGVhZChia2wpCmBgYAoKMS4gamXFvGVsaSBjaGNlbXkgenJlZHVrb3dhxIcgb2JjacSFxbxlbmllIHRvIG11c2lteSB6bmFsZcW6xIcgdGFraWUgWCwga3TDs3JlIHPEhSBzaWxuaWUgc2tvcmVsb3dhbmUgeiBiYWRhbsSFIHByemV6IG5hcyBjZWNoxIUuIEplxbxlbGkgY2hvZHppIG8gWCB0byBtYW15IGR3aWUgem1pZW5uZSwga3TDs3JlIHd5c3TEmXB1asSFIHcgxbpyw7NkbGUgbmllemFsZcW8bnltCgorIHphd8OzZAorIHdvamV3w7NkenR3bwoKV2VyeWZpa3VqZW15IGtvcmVsYWNqZSB6IHd5a29yenlzYW5pZW0gc3RhdHlzdHlraSAkXGNoaV4yJCBvcmF6IG1pYXJ5IFYgQ3JhbWVyYS4gTW/FvG5hIHLDs3duaWXFvCB6YXN0b3Nvd2HEhyBtb2RlbGUgbG9nLWxpbmlvd2UgYWxibyByZWdyZXNqxJkgbG9naXN0eWN6bsSFCgpgYGB7cn0KdGFiMSA8LSB4dGFicyh+IGtvbXBfaW5kICsga29kX3phd29kdV9ncnVwYSwgZGF0YSA9IGJrbCkKdGFiMiA8LSB4dGFicyh+IGtvbXBfaW5kICsgd29qMiwgZGF0YSA9IGJrbCkKcHJvcC50YWJsZSh0YWIxLCBtYXJnaW4gPSAyKQp0YWIyCmBgYAoKYGBge3J9CmFzc29jc3RhdHModGFiMSkKYXNzb2NzdGF0cyh0YWIyKQpgYGAKCmBgYHtyfQpndXMgPC0gYygyLjIsIDExLCA1LjQsIDYuNSwgNi43LCAwLjEsIDEyLCA3LjIsIDMuMSkqMTAwMApndXNfZGYgPC0gZGF0YS5mcmFtZShrb2RfemF3b2R1X2dydXBhID0gYXMuY2hhcmFjdGVyKDE6OSksCiAgICAgICAgICAgICAgICAgICAgIHBvcCA9IGd1cywgCiAgICAgICAgICAgICAgICAgICAgIHN0cmluZ3NBc0ZhY3RvcnMgPSBGKQpndXNfZGYgPC0gc3Vic2V0KGd1c19kZiwga29kX3phd29kdV9ncnVwYSAhPSA2KQpndXNfZGYKYGBgCgpgYGB7cn0KZ3VzX2RmICU+JSAKICBsZWZ0X2pvaW4oYmtsICU+JSBjb3VudChrb2RfemF3b2R1X2dydXBhPWFzLmNoYXJhY3Rlcihrb2RfemF3b2R1X2dydXBhKSwgbmFtZSA9ICJia2wiKSkgJT4lCiAgbXV0YXRlKGJrbCA9IGJrbCkKYGBgCgoxLiBEb2RhamVteSB3YWfEmSBkIChwc2V1ZG8td2FnxJkpIGRvIHpiaW9ydSBCS0wKCmBgYHtyfQpia2wgPC0gYmtsICU+JSBtdXRhdGUoZCA9IHN1bShndXMpIC8gbnJvdyhia2wpLAogICAgICAgICAgICAgICAgICAgICAga29kX3phd29kdV9ncnVwYSA9IGFzLmNoYXJhY3Rlcihrb2RfemF3b2R1X2dydXBhKSkKYGBgCgoyLiB6YWRla2xhcm93YcSHIG9iaWVrdCBrbGFzeSBzdnlkZXNpZ24gbmEgcG9kc3Rhd2llIGRhbnljaCBia2wKCmBgYHtyfQpia2xfc3VydiA8LSBzdnlkZXNpZ24oaWQgPSB+MSwgd2VpZ2h0cyA9IH4gZCwgZGF0YSA9IGJrbCkKYmtsX3N1cnYKYGBgCgozLiB1dHdvcnp5xIcgdGFiZWzEmSB6IGRhbnltaSBwb3B1bGFjeWpueW1pIChmdW4uIHh0YWJzKQoKYGBge3J9CnBvcF90YWIgPC0geHRhYnMocG9wIH4ga29kX3phd29kdV9ncnVwYSwgZGF0YSA9IGd1c19kZikKcG9wX3RhYgpgYGAKCjQuIHphc3Rvc293YcSHIGZ1bmtjasSZIGNhbGlicmF0ZSBsdWIgcG9zdFN0cmF0aWZ5CgpgYGB7cn0KYmtsX3N1cnZfY2FsIDwtIGNhbGlicmF0ZShkZXNpZ24gPSBia2xfc3VydiwKICAgICAgICAgICAgICAgICAgICAgICAgICBmb3JtdWxhID0gbGlzdCggfiBrb2RfemF3b2R1X2dydXBhKSwKICAgICAgICAgICAgICAgICAgICAgICAgICBwb3B1bGF0aW9uID0gbGlzdCggcG9wX3RhYiApKQoKYmtsX3N1cnZfY2FsCmBgYAoKNS4gQ3p5IG9kdHdvcnp5bGnFm215IHdhcnRvxZtjaSBnbG9iYWxuZQoKYGBge3J9CnN2eXRvdGFsKH4ga29kX3phd29kdV9ncnVwYSwgYmtsX3N1cnZfY2FsKQpgYGAKCjYuIEphayB3eWdsxIVkYWrEhSB3YWdpCgpgYGB7cn0KdGFibGUod2VpZ2h0cyhia2xfc3Vydl9jYWwpKQpgYGAKCjcuIG9zemFjb3dhxIcgbmFzemUgem1pZW5uZSBjZWx1IChZKQoKYGBge3J9CnN2eW1lYW4ofiBrb21wX2luZCwgYmtsX3N1cnYpCnN2eW1lYW4ofiBrb21wX2luZCwgYmtsX3N1cnZfY2FsKQpgYGAKCmBgYHtyfQpzdnltZWFuKH4ga29tcF9pbnRlciArIGtvbXBfaW5kICsga29tcHNfa2llciArIGplenlrX2FuZ2llbHNraSwgYmtsX3N1cnYpCnN2eW1lYW4ofiBrb21wX2ludGVyICsga29tcF9pbmQgKyBrb21wX2tpZXIgKyBqZXp5a19hbmdpZWxza2ksIGJrbF9zdXJ2X2NhbCkKYGBgCgo=</div>
 
 
 
