@@ -1,0 +1,69 @@
+---
+title: "Propensity score weighting: regresja logistyczna i propensity score"
+output: html_notebook
+---
+
+
+# Pakiety
+
+```{r}
+library(CBPS) ## covariate bapancing propensity score
+```
+
+# Wczytujemy dane
+
+```{r}
+df <- readRDS("../data-raw/data_for_lecture.rds")
+head(df)
+```
+
+# Regresja logistyczna
+
+1. przeanalizować dane np. wizualizacje, test $\chi^2$, inne testy
+2. można zabrać się za budowanie modelu
+
+stats::glm
+proc glm / proc logistic / proc genmod
+statsmodels.glm
+
+Zakładamy, że budujemy następujący model
+
+$$
+P(\text{status}=1| \text{gender}) = \frac{\exp(\beta_0 + \beta_1 \text{gender})}{1 + \exp(\beta_0 + \beta_1 \text{gender})}
+$$
+```{r}
+m1 <- glm(formula = status ~ gender, data = df, family = binomial(link = "logit")) ## binomial(), "binomial"
+summary(m1)
+```
+
+Ilorazy szans
+
+```{r}
+exp(coef(m1))
+```
+
+Ilorazy szans z przedziałem ufności 
+
+```{r}
+exp(confint(m1))
+```
+
+Chcemy otrzymać wektor $\hat{\rho}$ należy użyć funkcji fitted (predict)
+
+```{r}
+rho <- fitted(m1)
+summary(1/rho)
+```
+
+Budujemy większy model
+
+```{r}
+m2 <- update(m1, . ~ . + age + factor(woj) + factor(locality))
+summary(m2)
+```
+
+```{r}
+hist(fitted(m2), breaks = "scott", main = expression(hat(rho)))
+hist(1/fitted(m2), breaks = "scott", main = expression(1/hat(rho)))
+```
+
