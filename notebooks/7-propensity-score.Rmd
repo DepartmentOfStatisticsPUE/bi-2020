@@ -185,3 +185,27 @@ dane_model2 %>%
             true = sum(Y*(R==0))/sum((R==0)))
 ```
 
+A teraz kolejna opcja -- wyrzucamy z ze zbioru populacji te jednostki, które są w zbiorze big data
+
+```{r}
+dane_model3 <- big_data %>% mutate(R = 1) %>%
+  bind_rows(pop_data[-big_data_inc,] %>% mutate(R = 0))
+```
+
+```{r}
+model3_pop1 <- CBPS(formula = R ~ X_1 + X_2 + X_3, data = dane_model3, ATT = 1)
+model3_pop2 <- hdCBPS(formula = R ~ X_1 + X_2 + X_3, data = dane_model3, y = dane_model3$Y, ATT = 0)
+```
+
+```{r}
+dane_model3 %>%
+  mutate(wagi1 = 1/model3_pop1$fitted.values,
+         wagi2 = 1/model3_pop2$fitted.values) %>%
+  summarise(prop1 = sum(Y*R*wagi1)/sum(R*wagi1),
+            prop2 = sum(Y*R*wagi2)/sum(R*wagi2),
+            naive = sum(Y*R)/sum(R),
+            true =  mean(Y))
+```
+
+Wniosek: istotna jest identyfikacja jednostek, które są w źródle big data i poza big data.
+
