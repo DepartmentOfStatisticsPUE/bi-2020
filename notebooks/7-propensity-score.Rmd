@@ -8,7 +8,12 @@ output: html_notebook
 
 ```{r}
 library(CBPS) ## covariate bapancing propensity score
+library(tidyverse)
 ```
+
++ CBPS -- główna funkcja do szacowania prawdopodobieństwa przynależności do źródła nielosowego
++ hdCBPS -- do większych danych, zarówno pod względem liczby wierszy, jak i liczby zmiennych
++ npCBPS -- non-parametric CBPS -- wyłącznie dane jakościowe (wszystkie X są zmiennymi jakościowymi)
 
 # Wczytujemy dane
 
@@ -67,72 +72,116 @@ hist(fitted(m2), breaks = "scott", main = expression(hat(rho)))
 hist(1/fitted(m2), breaks = "scott", main = expression(1/hat(rho)))
 ```
 
-Covariate balancing propensity score
+
+
 
 ```{r}
-data(LaLonde)
-## Estimate CBPS
-fit <- CBPS(treat ~ age + educ + re75 + re74 +  I(re75==0) + I(re74==0),  data = LaLonde, ATT = 1, standardize = T)
+set.seed(123)
+N_pop <- 1e4
+## generuję dane dla populacji
+X_1 <- rbinom(n = N_pop, size = 1, prob = 0.45) ## płeć
+X_2 <- rpois(n = N_pop, lambda = 2) ## liczba dzieci
+X_3 <- rbinom(n = N_pop, size = 1, prob = 0.7) ## miejsce zamieszkania (1=wies, 0=miasto)
+epsilon <- rnorm(n = N_pop, mean = 0, sd = 10)
+Y <- 200 + 20*X_1 - 30*X_3 + epsilon
+pop_data <- data.frame(Y = Y, X_1 = factor(X_1), X_2, X_3 = factor(X_3))
+
+## generuję zmienna określającą przynależnosć do big data
+rho <-  exp(10 + X_2 - 15*X_3) / (1 + exp(10 + X_2 - 15*X_3))
+R <- rbinom(n = N_pop, size = 1,  prob = rho)
+
+big_data_inc <- which(R == 1)
+big_data <- pop_data[big_data_inc,]
+big_data$waga <- nrow(pop_data)/nrow(big_data) ## WAGA = N / n
+
+## próbę losową o wartości 3000
+proba_losowa <- pop_data[sample(1:nrow(pop_data), size = 3000),]
+c(Prawda = mean(pop_data$Y), Losowa = mean(proba_losowa$Y), Big_data = mean(big_data$Y))
+```
+
+
+1. należy połączyć obydwa zbiory danych (dane1, dane2)
+
+```{r}
+dane_model <- big_data %>% mutate(R = 1) %>%
+  bind_rows(proba_losowa %>% mutate(R = 0))
+
+summary(dane_model)
+```
+
+
+2. szacujemy model z wykorzystaniem funkcji CBPS albo hdCBPS
+
+```{r}
+model1 <- CBPS(formula = R ~ X_1 + X_2 + X_3, data = dane_model, ATT = 1)
+```
+
+3. Patrzymy na wyniki
+
+```{r}
+model1
+```
+
+
+```{r}
+summary(model1)
+```
+
+4. Wyciągamy wagi dla poszczególnych rekordów
+
+```{r}
+str(model1,1)
+
+dane_model <- dane_model %>%
+  mutate(wagi = 1/model1$fitted.values)
+```
+
+5. szacujemy Y dla źródła big data
+
+```{r}
+dane_model %>%
+  filter(R == 1) %>%
+  summarise(mean = weighted.mean(Y, wagi))
 ```
 
 ```{r}
-summary(fit)
+c(Prawda = mean(pop_data$Y), Losowa = mean(proba_losowa$Y), Big_data = mean(big_data$Y))
 ```
 
 ```{r}
-LaLonde$weights <- fit$weights
+model2 <- hdCBPS(formula = R ~ X_1 + X_2 + X_3,  data = dane_model, y = dane_model$Y, ATT = 0)
+
+dane_model <- dane_model %>% mutate(wagi2 = 1/model2$fitted.values)
+
+dane_model %>%
+  summarise(prop1 = sum(Y*R*wagi)/sum(R*wagi),
+            prop2 = sum(Y*R*wagi2)/sum(R*wagi2))
+
+```
+
+Teraz drugie podejście -- łączymy źródło big data z danymi populacji
+
+```{r}
+dane_model2 <- big_data %>% mutate(R = 1) %>%
+  bind_rows(pop_data %>% mutate(R = 0))
 ```
 
 ```{r}
-aggregate(educ ~ treat, FUN = mean, data = LaLonde)
+model_pop1 <- CBPS(formula = R ~ X_1 + X_2 + X_3, data = dane_model2, ATT = 1)
 ```
 
 ```{r}
-with(subset(LaLonde, treat == 1), weighted.mean(educ, weights))
+model_pop2 <- hdCBPS(formula = R ~ X_1 + X_2 + X_3,  data = dane_model2, y = dane_model2$Y, ATT = 0)
 ```
 
-```{r}
-balance(fit)
-```
 
 ```{r}
-fit <- npCBPS(treat ~ age + educ, data = LaLonde, corprior=.1/nrow(LaLonde))
-plot(fit)
-```
-
-```{r}
-pop_data$R <- R
-head(pop_data)
-```
-
-```{r}
-fit1 <- hdCBPS(formula = R ~ X_1 ,  data = pop_data, y = Y, ATT = 0)
-fit2 <- hdCBPS(formula = R ~ X_2 ,  data = pop_data, y = Y, ATT = 0)
-#fit3 <- hdCBPS(formula = R ~ X_3,  data = pop_data, y = Y, ATT = 0)
-fit4 <- hdCBPS(formula = R ~ X_1 + X_2,  data = pop_data, y = Y, ATT = 0)
-fit5 <- hdCBPS(formula = R ~ X_2 + X_3,  data = pop_data, y = Y, ATT = 0)
-fit6 <- hdCBPS(formula = R ~ X_1 + X_3,  data = pop_data, y = Y, ATT = 0)
-fit7 <- hdCBPS(formula = R ~ X_1 + X_2 + X_3,  data = pop_data, y = Y, ATT = 0)
-
-pop_data %>%
-  mutate(weights_1 = 1/fit1$fitted.values,
-         weights_2 = 1/fit2$fitted.values,
-         #weights_3 = 1/fit3$weights,
-         weights_4 = 1/fit4$fitted.values,
-         weights_5 = 1/fit5$fitted.values,
-         weights_6 = 1/fit6$fitted.values,
-         weights_7 = 1/fit7$fitted.values) %>%
-  summarise(true = mean(Y),
+dane_model2 %>%
+  mutate(wagi1 = 1/model_pop1$fitted.values,
+         wagi2 = 1/model_pop2$fitted.values) %>%
+  summarise(prop1 = sum(Y*R*wagi1)/sum(R*wagi1),
+            prop2 = sum(Y*R*wagi2)/sum(R*wagi2),
             naive = sum(Y*R)/sum(R),
-            prop1 = sum(Y*R*weights_1)/sum(R*weights_1),
-            prop2 = sum(Y*R*weights_2)/sum(R*weights_2),
-            #prop3 = sum(Y*R*weights_3)/sum(R*weights_3),
-            prop4 = sum(Y*R*weights_4)/sum(R*weights_4),
-            prop5 = sum(Y*R*weights_5)/sum(R*weights_5),
-            prop6 = sum(Y*R*weights_6)/sum(R*weights_6),
-            prop6 = sum(Y*R*weights_7)/sum(R*weights_7))
-
-
-
+            true = sum(Y*(R==0))/sum((R==0)))
 ```
 
