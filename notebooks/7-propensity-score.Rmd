@@ -67,3 +67,72 @@ hist(fitted(m2), breaks = "scott", main = expression(hat(rho)))
 hist(1/fitted(m2), breaks = "scott", main = expression(1/hat(rho)))
 ```
 
+Covariate balancing propensity score
+
+```{r}
+data(LaLonde)
+## Estimate CBPS
+fit <- CBPS(treat ~ age + educ + re75 + re74 +  I(re75==0) + I(re74==0),  data = LaLonde, ATT = 1, standardize = T)
+```
+
+```{r}
+summary(fit)
+```
+
+```{r}
+LaLonde$weights <- fit$weights
+```
+
+```{r}
+aggregate(educ ~ treat, FUN = mean, data = LaLonde)
+```
+
+```{r}
+with(subset(LaLonde, treat == 1), weighted.mean(educ, weights))
+```
+
+```{r}
+balance(fit)
+```
+
+```{r}
+fit <- npCBPS(treat ~ age + educ, data = LaLonde, corprior=.1/nrow(LaLonde))
+plot(fit)
+```
+
+```{r}
+pop_data$R <- R
+head(pop_data)
+```
+
+```{r}
+fit1 <- hdCBPS(formula = R ~ X_1 ,  data = pop_data, y = Y, ATT = 0)
+fit2 <- hdCBPS(formula = R ~ X_2 ,  data = pop_data, y = Y, ATT = 0)
+#fit3 <- hdCBPS(formula = R ~ X_3,  data = pop_data, y = Y, ATT = 0)
+fit4 <- hdCBPS(formula = R ~ X_1 + X_2,  data = pop_data, y = Y, ATT = 0)
+fit5 <- hdCBPS(formula = R ~ X_2 + X_3,  data = pop_data, y = Y, ATT = 0)
+fit6 <- hdCBPS(formula = R ~ X_1 + X_3,  data = pop_data, y = Y, ATT = 0)
+fit7 <- hdCBPS(formula = R ~ X_1 + X_2 + X_3,  data = pop_data, y = Y, ATT = 0)
+
+pop_data %>%
+  mutate(weights_1 = 1/fit1$fitted.values,
+         weights_2 = 1/fit2$fitted.values,
+         #weights_3 = 1/fit3$weights,
+         weights_4 = 1/fit4$fitted.values,
+         weights_5 = 1/fit5$fitted.values,
+         weights_6 = 1/fit6$fitted.values,
+         weights_7 = 1/fit7$fitted.values) %>%
+  summarise(true = mean(Y),
+            naive = sum(Y*R)/sum(R),
+            prop1 = sum(Y*R*weights_1)/sum(R*weights_1),
+            prop2 = sum(Y*R*weights_2)/sum(R*weights_2),
+            #prop3 = sum(Y*R*weights_3)/sum(R*weights_3),
+            prop4 = sum(Y*R*weights_4)/sum(R*weights_4),
+            prop5 = sum(Y*R*weights_5)/sum(R*weights_5),
+            prop6 = sum(Y*R*weights_6)/sum(R*weights_6),
+            prop6 = sum(Y*R*weights_7)/sum(R*weights_7))
+
+
+
+```
+

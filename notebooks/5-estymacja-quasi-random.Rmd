@@ -32,7 +32,7 @@ Następnie tworzymy zmienną celu $Y$, a natępnie zakładamy, ze tworzymy nielo
 
 ```{r}
 set.seed(123)
-N_pop <- 1e6
+N_pop <- 1e5
 ## generuję dane dla populacji
 X_1 <- rbinom(n = N_pop, size = 1, prob = 0.45) ## płeć
 X_2 <- rpois(n = N_pop, lambda = 2) ## liczba dzieci
