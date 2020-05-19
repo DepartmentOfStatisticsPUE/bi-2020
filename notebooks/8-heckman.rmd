@@ -1,0 +1,66 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+
+```{r}
+install.packages("sampleSelection")
+install.packages("GJRM")
+library(data.table)
+library(tidyverse)
+library(haven)
+library(sampleSelection)
+library(GJRM)
+```
+
+### women wages
+
+```{r}
+women <- read_stata("../data-raw/womenwk.dta") 
+women$selection <- !is.na(women$wage)
+head(women)
+```
+
+
+```{r}
+m0 <- glm(wage ~  education + age,  data = women,
+           subset = selection)
+summary(m0)
+```
+
+W związku z doborem próby czyli charakterystyczna grupa kobiet jest aktywna zawodowo należy ten czynnik uwzględnić w modelu.
+
+
+```{r}
+m1 <- heckit(selection = selection ~ married + children + education + age,
+             outcome = wage ~  education + age, 
+             data = women, 
+             method = "2step")
+summary(m1)
+```
+
+```{r}
+m2 <- heckit(selection ~ married + children+ education +age,
+             wage ~  education + age, 
+             data = women,
+             method = "ml")
+summary(m2)
+```
+
+
+To samo ale z pakietem GJRM
+
+```{r}
+model3 <- gjrm(formula = list(selection ~ married + children + education + age,
+                              wage ~  education + age), 
+               data = women, 
+               BivD =  "N", 
+               margins = c("probit", "N"), 
+               Model = "BSS") ## bivariate sample selection
+
+summary(model3)
+```
+
+
+
