@@ -1,0 +1,48 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+Instalujemy pakiet gtrendsR
+
+```{r}
+install.packages("gtrendsR")
+```
+
+Ładujemy pakiet gtrendsR
+
+```{r}
+library(gtrendsR)
+library(tidyverse)
+```
+
+
++ Najważniejsza funkcja to `gtrends` -- ona służy do zapytań, tu wpisujemy hasła tak jak w na stronie google trends.
++ Categories -- ramka danych zawierająca spis wszystkich kategorii
+
+
+```{r}
+categories[grepl("jobs", categories$name, ignore.case = T),]
+countries[countries$country_code == "PL",]
+```
+
+Wyszukajmy hasła "Urząd Pracy" z wykorzystaniem gtrends przy określeniu odpowiedniej kategorii i kraju
+
+```{r}
+urzedy_pracy <- gtrends(keyword = c("urząd pracy", "bezrobocie"), geo = "PL", category = "60")
+plot(urzedy_pracy)
+```
+
+# Apple mobility trends
+
+```{r}
+read_csv(file = "../data-raw/applemobilitytrends-2020-05-24.csv") %>%
+  filter(transportation_type == "driving", country == "Poland", geo_type == "city") %>%
+  select(region, `2020-01-13`:`2020-05-24`) %>%
+  gather(dates, values, -region) %>%
+  mutate(dates = as.Date(dates)) %>%
+  ggplot(data = ., aes(x = dates, y = values, group = region, color = region)) +
+  geom_line() +
+  scale_color_brewer(palette = "Set1")
+```
+
