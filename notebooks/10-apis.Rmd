@@ -1,0 +1,50 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+Instalujemy pakiety
+
+```{r}
+devtools::install_github('charlie86/spotifyr')
+install.packages('rtweet')
+library(spotifyr)
+library(rtweet)
+library(tidyverse)
+```
+
+Tworzymy aplikację wykorzystującą spotify
+
+1. musimy wejść na stronę https://developer.spotify.com/dashboard/applications
+2. następnie trzeba stworzyć aplikację
+
+```{r}
+Sys.setenv(SPOTIFY_CLIENT_ID = 'xxxxxxxxxxxxxxxxxxxx')
+Sys.setenv(SPOTIFY_CLIENT_SECRET = 'xxxxxxxxxxxxxxxxxxxx')
+
+access_token <- get_spotify_access_token()
+```
+
+3. Pobierzmy informacje o jakimś wykonawcy
+
+```{r}
+darkthrone <- get_artist_audio_features(artist = "Darkthrone")
+akcent <- get_artist_audio_features(artist = "10wjV72OetIdsUQEcjSnOd")
+head(akcent)
+```
+
+```{r}
+ggplot() + 
+  geom_density(data = darkthrone, aes(x = speechiness, color = "Darkthrone")) + 
+  geom_density(data = akcent, aes(x = speechiness, color = "Akcent")) +
+  scale_color_brewer(name = "Zespól", type = "qual", palette = "Set1")
+```
+
+top 20 najczęściej słuchanych artystów -- wymaga autoryzacji
+
+```{r}
+my_top_20 <- get_my_top_artists_or_tracks(type = "artists", 
+                                          time_range = "medium_term", limit = 20)
+```
+
+

@@ -1,0 +1,84 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(maxLik)
+library(rootSolve)
+library(sampling)
+```
+
+Functions
+
+```{r}
+ll_score <- function(sample_a, sample_b, sample_b_w, theta) {
+  theta <- as.matrix(theta)
+  ## sample_a
+  X_a <- cbind(1, sample_a)
+  sums_a <- colSums(X_a)
+  ## sample_b
+  X_b <- cbind(1, sample_b)
+  pr <- as.vector(exp(X_b %*% theta) / (1 + exp(X_b %*% theta)))
+  sums_b <- colSums(sample_b_w * pr * X_b)
+  return(sums_a - sums_b)
+}
+```
+
+Simulation
+
+```{r}
+set.seed(666)
+N <- 2e4
+n_a <- 500
+n_b <- 1000
+z1 <- rbinom(N,1,prob=0.5)
+z2 <- runif(N, 0, 2)
+z3 <- rexp(N, 1)
+z4 <- rchisq(N, 4)
+x1 <- z1
+x2 <- z2 + 0.3*x1
+x3 <- z3 + 0.2*(x1 + x2)
+x4 <- z4 + 0.1*(x1 + x2 + x3)
+epsil <- rnorm(N)
+sigma <- 3.2 ## c(4.8, 3.2, 1.6)
+y <- 2 + x1 + x2 + x3 + x4 + sigma*epsil
+popul <- cbind(y, x1, x2, x3, x4)
+#summary(lm(y ~ x1 + x2 + x3 + x4))
+
+## nonprob sample
+theta0 <- -5.1359 ## 500
+prob_a <- exp(theta0 + 0.1*x1 + 0.2*x2 + 0.1*x3 + 0.2*x4) / (1 + exp(theta0 + 0.1*x1 + 0.2*x2 + 0.1*x3 + 0.2*x4))
+sum(prob_a)
+
+## probability sample
+d <- 0.19022
+z <- d + x3 + 0.03*y
+# max(z)/min(z)
+B <- 100
+est_y <- numeric(B)
+est_sa_y <- numeric(B)
+for (b in 1:B) {
+  set.seed(b)
+  sel_a <- UPpoisson(prob_a)
+  prob_b <- inclusionprobabilities(a = z, n = n_b)
+  sel_b <- UPpoisson(prob_b)
+  sample_a <- popul[sel_a == 1,]
+  sample_b <- cbind(popul[sel_b == 1,], w = 1/prob_b[sel_b==1])
+  colums <- c("x1","x2", "x4")
+  solut <- rootSolve::multiroot(f = ll_score, 
+                                start = rep(0, length(colums) + 1),
+                                sample_a = sample_a[, colums],
+                                sample_b = sample_b[, colums],
+                                sample_b_w = sample_b[, "w"])
+  theta_hat <- solut$root
+  x_theta <- as.vector(cbind(1,sample_a[,colums]) %*% theta_hat)
+  pr <- exp(x_theta)/(1 + exp(x_theta))
+  est_y[b] <- sum(sample_a[,"y"]/pr)/N
+  est_sa_y[b] <- mean(sample_a[,"y"])
+  
+}
+c(naive = mean(est_sa_y), ipw = mean(est_y), true = mean(y))
+
+```
+
